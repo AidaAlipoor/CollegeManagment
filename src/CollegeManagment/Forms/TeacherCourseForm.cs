@@ -6,14 +6,24 @@ using DataAccess.Entities;
 using UI.ComboBoxItems;
 using CollegeManagment.UI.Extensions;
 using UI.Extensions;
+using TeacherEntity = DataAccess.Entities.Teacher;
+using TeacherCourseEntity = DataAccess.Entities.TeacherCourse;
+using CourseEntity = DataAccess.Entities.Course;
+using BusinessLogic.Repositories;
+using DataAccess.EntitiesConfiguration;
 
 namespace CollegeManagment.UI.Forms
 {
     public partial class TeacherCourseForm : BaseForm
     {
+        private readonly IRepository<TeacherCourseEntity> _teacherCourseRepository;
+        //private readonly IRepository<CourseEntity> _courseRepository;
+        private readonly IRepository<TeacherEntity> _teacherRepository;
         public TeacherCourseForm() : base()
         {
             InitializeComponent();
+            _teacherCourseRepository = new TeacherCourseRepository(new CollegeManagmentContext());
+            _teacherRepository = new TeacherRepository(_dbContext);
         }
 
         private async void AddButton_Click(object sender, EventArgs e)
@@ -68,35 +78,34 @@ namespace CollegeManagment.UI.Forms
             var teacher = await GetSelectedTeacherEntityAsync();
             var course = await GetSelectedCourseEntityAsync();
 
-            await InsertTeacherCourseAsync(teacher, course);
+            InsertTeacherCourseAsync(teacher, course);
 
             return;
         }
 
-        private Task InsertTeacherCourseAsync(Teacher selectedTeacher, Course course)
+        private void InsertTeacherCourseAsync(TeacherEntity selectedTeacher, CourseEntity course)
         {
-            var addingTeacherCourse = new TeacherCourse
+            var addingTeacherCourse = new TeacherCourseEntity
             {
                 Teacher = selectedTeacher,
                 Course = course
             };
 
-            _dbContext.TeacherCourses.Add(addingTeacherCourse);
-            return Task.CompletedTask;
+            _teacherCourseRepository.Add(addingTeacherCourse);
         }
 
-        private async Task<Course> GetSelectedCourseEntityAsync()
+        private async Task<CourseEntity> GetSelectedCourseEntityAsync()
         {
             var selectedCourseId = CoursesComboBox.GetSelectedItem().Value;
 
             return await _dbContext.Courses.FindAsync(selectedCourseId);
         }
 
-        private async Task<Teacher> GetSelectedTeacherEntityAsync()
+        private async Task<TeacherEntity> GetSelectedTeacherEntityAsync()
         {
             var selectedTeacherId = teacherComboBox.GetSelectedItem().Value;
 
-            return await _dbContext.Teachers.FindAsync(selectedTeacherId);
+            return await _teacherRepository.GetAsync((int)selectedTeacherId);
         }
 
         private async Task DeleteAsync()

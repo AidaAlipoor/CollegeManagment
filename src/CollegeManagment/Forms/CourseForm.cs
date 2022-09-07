@@ -1,19 +1,24 @@
 ﻿
+using BusinessLogic.Repositories;
 using DataAccess.Entities;
+using DataAccess.EntitiesConfiguration;
 using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UI.Extensions;
+using CourseEntity = DataAccess.Entities.Course;
 
 namespace CollegeManagment.UI.Forms
 {
     public partial class CourseForm : BaseForm
     {
+        private readonly IRepository<CourseEntity> _courseRepository;
         public CourseForm()
         {
             InitializeComponent();
+            _courseRepository = new CourseRepository(new CollegeManagmentContext());
         }
 
         private async void AddButton_Click(object sender, EventArgs e)
@@ -21,15 +26,14 @@ namespace CollegeManagment.UI.Forms
             try
             {
                 AddAsync(CourseNameTextBox.Text);
-                await SaveChangesAsync();
-
+                await _courseRepository.SaveAsync();
                 await RefreshDataGridViewAsync();
                 MessageBox.Show(MessageProvider.ItemAddedSuccesfully);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
-                ShowErrorMessageBox(ex.Message);
+                ShowErrorMessageBox(MessageProvider.InvalidFields);
             }
         }
         private async void DeleteButton_Click(object sender, EventArgs e)
@@ -37,14 +41,14 @@ namespace CollegeManagment.UI.Forms
             try
             {
                 await DeleteAsync();
-                await SaveChangesAsync();
+                await _courseRepository.SaveAsync();
 
                 await RefreshDataGridViewAsync();
                 MessageBox.Show(MessageProvider.ItemIsDeleted);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message.ToString(), MessageProvider.ItemIsNotDeletable, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, MessageProvider.ItemIsNotDeletable, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
 
@@ -53,8 +57,8 @@ namespace CollegeManagment.UI.Forms
         {
             try
             {
-                await EditAsync();
-                await SaveChangesAsync();
+                await UpdateAsync();
+                await _courseRepository.SaveAsync();
                 await RefreshDataGridViewAsync();
                 MessageBox.Show(MessageProvider.ItemIsEdited);
             }
@@ -70,35 +74,35 @@ namespace CollegeManagment.UI.Forms
             this.Hide();
         }
 
-        private async Task CheckIsCourseDeletableAsync()
-        {
-            var selectedCourseId = CoursesDataGridView.GetId();
+        //private async Task CheckIsCourseDeletableAsync()
+        //{
+        //    var selectedCourseId = CoursesDataGridView.GetId();
 
-            var isCourseUsedAtTeacherCourses = await _dbContext.TeacherCourses
-                .Include(tc => tc.Course)
-                .AnyAsync(tc => tc.Course.Id == selectedCourseId);
+        //    var isCourseUsedAtTeacherCourses = await _dbContext.TeacherCourses
+        //        .Include(tc => tc.Course)
+        //        .AnyAsync(tc => tc.Course.Id == selectedCourseId);
 
-            if (isCourseUsedAtTeacherCourses)
-                throw new Exception(MessageProvider.ItemIsNotDeletable);
-        }
+        //    if (isCourseUsedAtTeacherCourses)
+        //        throw new Exception(MessageProvider.ItemIsNotDeletable);
+        //}
 
-        private bool IsCourseValid() => !IsCourseNameEmpty() && IsLetter();
-        private bool IsCourseNameEmpty() => string.IsNullOrEmpty(CourseNameTextBox.Text);
-        private bool IsLetter() => CourseNameTextBox.Text.Count(c => char.IsLetter(c)) == CourseNameTextBox.Text.Length;
+        //private bool IsCourseValid() => !IsCourseNameEmpty() && IsLetter();
+        //private bool IsCourseNameEmpty() => string.IsNullOrEmpty(CourseNameTextBox.Text);
+        //private bool IsLetter() => CourseNameTextBox.Text.Count(c => char.IsLetter(c)) == CourseNameTextBox.Text.Length;
 
 
         private void AddAsync(string courseName)
         {
-            if (!IsCourseValid())
-                throw new Exception();
+            //if (!IsCourseValid())
+            //    throw new Exception();
 
-            _dbContext.Courses.Add(new Course { CourseName = courseName });
+            _courseRepository.Add(new CourseEntity { CourseName = courseName });
         }
         private async Task RefreshDataGridViewAsync()
         {
             CoursesDataGridView.Rows.Clear();
 
-            var courses = await _dbContext.Courses.ToArrayAsync();
+            var courses = await _courseRepository.GetAsync();
 
             foreach (var course in courses)
                 CoursesDataGridView.Rows
@@ -106,8 +110,8 @@ namespace CollegeManagment.UI.Forms
         }
         private void AddColumnsToDataGridView()
         {
-            var idColumn = nameof(Course.Id);
-            var nameColumn = nameof(Course.CourseName);
+            var idColumn = nameof(CourseEntity.Id);
+            var nameColumn = nameof(CourseEntity.CourseName);
 
             var isReadOnly = true;
 
@@ -116,21 +120,17 @@ namespace CollegeManagment.UI.Forms
         }
         private async Task DeleteAsync()
         {
-            await CheckIsCourseDeletableAsync();
-
             var deletedId = CoursesDataGridView.GetId();
-            var removeCourse = await _dbContext.Courses.FindAsync(deletedId);
-
-            _dbContext.Courses.Remove(removeCourse);
+           await _courseRepository.DeleteAsync(deletedId);
 
         }
-        private async Task EditAsync()
+        private async Task UpdateAsync()
         {
-            if (!IsCourseValid())
-                throw new Exception();
+            //if (!IsCourseValid())
+            //    throw new Exception();
 
             var selectedRowId = CoursesDataGridView.GetId();
-            var newData = await _dbContext.Courses.FindAsync(selectedRowId);
+            var newData = await _courseRepository.GetAsync(selectedRowId);
 
             newData.CourseName = CourseNameTextBox.Text;
 
