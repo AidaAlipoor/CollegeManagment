@@ -66,6 +66,10 @@
     <Compile Include="Migrations\202208290950510_initEntities.Designer.cs">
       <DependentUpon>202208290950510_initEntities.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202209071122236_EditStudentEntity.cs" />
+    <Compile Include="Migrations\202209071122236_EditStudentEntity.designer.cs">
+      <DependentUpon>202209071122236_EditStudentEntity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataAccess\EntitiesConfiguration\CollegeManagmentContext.cs" />
@@ -89,6 +93,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202208290950510_initEntities.resx">
       <DependentUpon>202208290950510_initEntities.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202209071122236_EditStudentEntity.resx">
+      <DependentUpon>202209071122236_EditStudentEntity.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

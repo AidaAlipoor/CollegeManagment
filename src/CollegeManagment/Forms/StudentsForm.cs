@@ -1,4 +1,4 @@
-﻿using DataAccess.Entities;
+﻿using BusinessLogic.Repositories;
 using DataAccess.EntitiesConfiguration;
 using System;
 using System.Data.Entity;
@@ -12,9 +12,11 @@ namespace CollegeManagment.UI.Forms
 {
     public partial class StudentsForm : BaseForm
     {
+        private readonly IRepository<StudentEntity> _repository;
         public StudentsForm()
         {
             InitializeComponent();
+            _repository = new StudentRepository(new CollegeManagmentContext());
         }
 
         private async void AddButton_Click(object sender, EventArgs e)
@@ -22,14 +24,14 @@ namespace CollegeManagment.UI.Forms
             try
             {
                 Add(StudentNameTextBox.Text, StudentLastNameTextBox.Text, int.Parse(StudentIdNumberTextBox.Text));
-                
-                await SaveChangesAsync();
+
+                await _repository.SaveAsync();
                 await RefreshDataGridViewAsync();
                 MessageBox.Show(MessageProvider.ItemAddedSuccesfully);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ShowErrorMessageBox(ex.Message);
+                ShowErrorMessageBox(MessageProvider.InvalidFields);
             }
         }
         private async void DeleteButton_Click(object sender, EventArgs e)
@@ -37,13 +39,13 @@ namespace CollegeManagment.UI.Forms
             try
             {
                 await DeleteAsync();
-                await SaveChangesAsync();
+                await _repository.SaveAsync();
                 await RefreshDataGridViewAsync();
                 MessageBox.Show(MessageProvider.ItemIsDeleted);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ShowErrorMessageBox(ex.Message);
+                ShowErrorMessageBox(MessageProvider.ExceptionErrorMessage);
             }
 
         }
@@ -51,15 +53,15 @@ namespace CollegeManagment.UI.Forms
         {
             try
             {
-                await EditAsync();
-                await SaveChangesAsync();
+                await UpdateAsync();
+                await  _repository.SaveAsync();
                 EditGridViewItems();
                 MessageBox.Show(MessageProvider.ItemIsEdited);
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ShowErrorMessageBox(ex.Message);
+                ShowErrorMessageBox(MessageProvider.InvalidFields);
             }
         }
         private void BackButton_Click(object sender, EventArgs e)
@@ -71,37 +73,37 @@ namespace CollegeManagment.UI.Forms
 
 
        
-        private bool IsStudentValid()
-        {
-            return !IsStudentNameEmpty() && IsLetter() && IsIdNumberValid();
-        }
-        private bool IsStudentNameEmpty() => string.IsNullOrEmpty(StudentNameTextBox.Text)
-            && string.IsNullOrEmpty(StudentLastNameTextBox.Text);
-        private bool IsLetter()
-        {
-            var studentName = StudentNameTextBox.Text;
-            var studentLastName = StudentLastNameTextBox.Text;
+        //private bool IsStudentValid()
+        //{
+        //    return !IsStudentNameEmpty() && IsLetter() && IsIdNumberValid();
+        //}
+        //private bool IsStudentNameEmpty() => string.IsNullOrEmpty(StudentNameTextBox.Text)
+        //    && string.IsNullOrEmpty(StudentLastNameTextBox.Text);
+        //private bool IsLetter()
+        //{
+        //    var studentName = StudentNameTextBox.Text;
+        //    var studentLastName = StudentLastNameTextBox.Text;
 
-            return studentName.Count(c => char.IsLetter(c)) == studentName.Length
-                && studentLastName.Count(c => char.IsLetter(c)) == studentLastName.Length;
-        }
-        private bool IsIdNumberValid()
-        {
-            var studentIdNumber = StudentIdNumberTextBox.Text;
+        //    return studentName.Count(c => char.IsLetter(c)) == studentName.Length
+        //        && studentLastName.Count(c => char.IsLetter(c)) == studentLastName.Length;
+        //}
+        //private bool IsIdNumberValid()
+        //{
+        //    var studentIdNumber = StudentIdNumberTextBox.Text;
 
-            return int.TryParse(studentIdNumber, out _) 
-                && studentIdNumber.Length > 0 
-                && studentIdNumber.Length < StudentEntity.IdNumberLengthLimit;
-        }
+        //    return int.TryParse(studentIdNumber, out _) 
+        //        && studentIdNumber.Length > 0 
+        //        && studentIdNumber.Length < StudentEntity.IdNumberLengthLimit;
+        //}
 
 
 
         public void Add(string studentName, string studentLastName, int studentIdNumber)
         {
-            if (!IsStudentValid())
-                throw new Exception();
+            //if (!IsStudentValid())
+            //    throw new Exception();
 
-            _dbContext.Students.Add(
+            _repository.Add(
                 new StudentEntity
                 {
                     StudentName = studentName,
@@ -114,7 +116,7 @@ namespace CollegeManagment.UI.Forms
         {
             StudentsDataGridView.Rows.Clear();
 
-            var students = await _dbContext.Students.ToArrayAsync();
+            var students = await _repository.GetAsync();
 
             foreach (var student in students)
                 StudentsDataGridView.Rows
@@ -139,18 +141,16 @@ namespace CollegeManagment.UI.Forms
         public async Task DeleteAsync()
         {
             var deletedId = StudentsDataGridView.GetId();
-            var removeStudent = await _dbContext.Students.FindAsync(deletedId);
-
-            _dbContext.Students.Remove(removeStudent);
+            await _repository.DeleteAsync(deletedId);
         }
 
-        public async Task EditAsync()
+        public async Task UpdateAsync()
         {
-            if (!IsStudentValid())
-                throw new Exception();
+            //if (!IsStudentValid())
+            //    throw new Exception();
 
             var selectedRowId = StudentsDataGridView.GetId();
-            var newData = await _dbContext.Students.FindAsync(selectedRowId);
+            var newData = await _repository.GetAsync(selectedRowId);
 
             newData.StudentName = StudentNameTextBox.Text;
             newData.StudentLastName = StudentLastNameTextBox.Text;
