@@ -14,11 +14,10 @@ namespace CollegeManagment.UI.Forms
 {
     public partial class CourseForm : BaseForm
     {
-        private readonly IRepository<CourseEntity> _courseRepository;
+        private readonly IRepository<CourseEntity> _courseRepository = new CourseRepository();
         public CourseForm()
         {
             InitializeComponent();
-            _courseRepository = new CourseRepository(CollegeManagmentContext.GetInstance());
         }
 
         private async void AddButton_Click(object sender, EventArgs e)

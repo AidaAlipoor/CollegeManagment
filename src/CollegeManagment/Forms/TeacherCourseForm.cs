@@ -23,9 +23,9 @@ namespace CollegeManagment.UI.Forms
 
             var dbContext = CollegeManagmentContext.GetInstance();
 
-            _teacherCourseRepository = new TeacherCourseRepository(dbContext);
+            _teacherCourseRepository = new TeacherCourseRepository();
             _teacherRepository = new TeacherRepository();
-            _courseRepository = new CourseRepository(dbContext);
+            _courseRepository = new CourseRepository();
         }
 
         private async void AddButton_Click(object sender, EventArgs e)
