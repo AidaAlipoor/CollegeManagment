@@ -49,9 +49,9 @@ namespace BusinessLogic.Repositories
             return base.GetAsync(predicate);
         }
 
-        private bool IsCourseValid(CourseEntity entity) => !IsCourseNameEmpty(entity.CourseName) && IsLetter(entity.CourseName);
+        private bool IsCourseValid(CourseEntity entity) => !IsCourseNameEmpty(entity.CourseName) && !IsLetter(entity.CourseName);
         private bool IsCourseNameEmpty(string name) => string.IsNullOrEmpty(name);
-        private bool IsLetter(string name) => name.Count(c => char.IsLetter(c)) == name.Length;
+        private bool IsLetter(string name) => int.TryParse(name , out _);
         private void CheckIsCourseDeletable(CourseEntity entity)
         {
             var isCourseUsedAtTeacherCourses = dbContext.TeacherCourses

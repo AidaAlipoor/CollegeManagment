@@ -46,9 +46,9 @@ namespace CollegeManagment.UI.Forms
                 await RefreshDataGridViewAsync();
                 MessageBox.Show(MessageProvider.ItemIsDeleted);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(ex.Message, MessageProvider.ItemIsNotDeletable, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ShowErrorMessageBox(MessageProvider.ItemIsNotDeletable);
             }
 
 

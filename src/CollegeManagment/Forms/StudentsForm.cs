@@ -1,8 +1,6 @@
 ﻿using BusinessLogic.Repositories;
 using DataAccess.EntitiesConfiguration;
 using System;
-using System.Data.Entity;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UI.Extensions;
@@ -23,7 +21,7 @@ namespace CollegeManagment.UI.Forms
         {
             try
             {
-                Add(StudentNameTextBox.Text, StudentLastNameTextBox.Text, int.Parse(StudentIdNumberTextBox.Text));
+                Add(StudentNameTextBox.Text, StudentLastNameTextBox.Text, IntConvertor.ToInt(StudentIdNumberTextBox.Text));
 
                 await _repository.SaveAsync();
                 await RefreshDataGridViewAsync();

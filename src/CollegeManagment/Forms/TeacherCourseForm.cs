@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using DataAccess.Entities;
 using UI.ComboBoxItems;
 using CollegeManagment.UI.Extensions;
 using UI.Extensions;
@@ -17,13 +15,17 @@ namespace CollegeManagment.UI.Forms
     public partial class TeacherCourseForm : BaseForm
     {
         private readonly IRepository<TeacherCourseEntity> _teacherCourseRepository;
-        //private readonly IRepository<CourseEntity> _courseRepository;
+        private readonly IRepository<CourseEntity> _courseRepository;
         private readonly IRepository<TeacherEntity> _teacherRepository;
         public TeacherCourseForm() : base()
         {
             InitializeComponent();
-            _teacherCourseRepository = new TeacherCourseRepository(new CollegeManagmentContext());
-            _teacherRepository = new TeacherRepository(_dbContext);
+            
+            CollegeManagmentContext dbContext = new CollegeManagmentContext();
+
+            _teacherCourseRepository = new TeacherCourseRepository(dbContext);
+            _teacherRepository = new TeacherRepository(dbContext);
+            _courseRepository = new CourseRepository(dbContext);
         }
 
         private async void AddButton_Click(object sender, EventArgs e)
@@ -31,7 +33,7 @@ namespace CollegeManagment.UI.Forms
             try
             {
                 await InsertTeacherCourseAsync();
-                await SaveChangesAsync();
+                await _teacherCourseRepository.SaveAsync();
                 await RefreshDataGridViewAsync(); 
 
                 MessageBox.Show(MessageProvider.ItemAddedSuccesfully);
@@ -46,7 +48,7 @@ namespace CollegeManagment.UI.Forms
             try
             {
                 await DeleteAsync();
-                await SaveChangesAsync();
+                await _teacherCourseRepository?.SaveAsync();
                 await RefreshDataGridViewAsync();
                 MessageBox.Show(MessageProvider.ItemIsDeleted);
 
@@ -61,7 +63,7 @@ namespace CollegeManagment.UI.Forms
             try
             {
                 await EditAsync();
-                await SaveChangesAsync();
+                await _teacherCourseRepository.SaveAsync();
                 await RefreshDataGridViewAsync();
                 MessageBox.Show(MessageProvider.ItemIsEdited);
             }
@@ -98,7 +100,7 @@ namespace CollegeManagment.UI.Forms
         {
             var selectedCourseId = CoursesComboBox.GetSelectedItem().Value;
 
-            return await _dbContext.Courses.FindAsync(selectedCourseId);
+            return await _courseRepository.GetAsync((int)selectedCourseId);
         }
 
         private async Task<TeacherEntity> GetSelectedTeacherEntityAsync()
@@ -114,22 +116,20 @@ namespace CollegeManagment.UI.Forms
                 throw new Exception();
 
             var teacherId = teacherCoursesDataGridView.GetId();
-            var teacher = await _dbContext.TeacherCourses.FindAsync(teacherId);
-
-            _dbContext.TeacherCourses.Remove(teacher);
+            await _teacherCourseRepository.DeleteAsync(teacherId);
         }
 
         private async Task EditAsync()
         {
             var selectedTeacherCourseId = teacherCoursesDataGridView.GetId();
-            var selectedTeacherCourse = await _dbContext.TeacherCourses.FindAsync(selectedTeacherCourseId);
+            var selectedTeacherCourse = await _teacherCourseRepository.GetAsync((int)selectedTeacherCourseId);
 
 
             var selectedTeacherId = teacherComboBox.GetSelectedItem().Value;
-            var selectedTeacher = await _dbContext.Teachers.FindAsync(selectedTeacherId);
+            var selectedTeacher = await _teacherRepository.GetAsync((int)selectedTeacherId);
 
             var selectedCourseId = CoursesComboBox.GetSelectedItem().Value;
-            var selectedCourse = await _dbContext.Courses.FindAsync(selectedCourseId);
+            var selectedCourse = await _courseRepository.GetAsync((int)selectedCourseId);
 
 
             selectedTeacherCourse.Teacher = selectedTeacher;
@@ -140,7 +140,7 @@ namespace CollegeManagment.UI.Forms
         {
             teacherCoursesDataGridView.Rows.Clear();
 
-            var items = await _dbContext.TeacherCourses.ToArrayAsync();
+            var items = await _teacherCourseRepository.GetAsync();
 
             foreach (var item in items)
                 teacherCoursesDataGridView.Rows
@@ -149,10 +149,10 @@ namespace CollegeManagment.UI.Forms
 
         private void AddColumnsToDataGridView()
         {
-            var idColumn = nameof(TeacherCourse.Id);
-            var nameColumn = nameof(TeacherCourse.Teacher.TeacherName);
-            var lastNameColumn = nameof(TeacherCourse.Teacher.TeacherLastName);
-            var courseNameColumn = nameof(TeacherCourse.Course.CourseName);
+            var idColumn = nameof(TeacherCourseEntity.Id);
+            var nameColumn = nameof(TeacherCourseEntity.Teacher.TeacherName);
+            var lastNameColumn = nameof(TeacherCourseEntity.Teacher.TeacherLastName);
+            var courseNameColumn = nameof(TeacherCourseEntity.Course.CourseName);
 
             var isReadOnly = true;
 
@@ -166,7 +166,7 @@ namespace CollegeManagment.UI.Forms
 
         private async Task LoadDataInTeacherComboBoxAsync()
         {
-            var teachers = await _dbContext.Teachers.ToArrayAsync();
+            var teachers = await _teacherRepository.GetAsync();
 
             foreach (var teacher in teachers)
                 teacherComboBox.Items.Add(
@@ -182,7 +182,7 @@ namespace CollegeManagment.UI.Forms
 
         private async Task LoadDataInCoursesComboBoxAsync()
         {
-            var courses = await _dbContext.Courses.ToArrayAsync();
+            var courses = await _courseRepository.GetAsync();
 
             foreach (var course in courses)
                 CoursesComboBox.Items.Add(
