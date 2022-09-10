@@ -64,7 +64,7 @@ namespace CollegeManagment.UI.Forms
         {
             try
             {
-                await EditAsync();
+                await UpdateAsync();
                 await _gradeRepository.SaveAsync();
 
                 await RefreshDataGridViewAsync();
@@ -147,7 +147,7 @@ namespace CollegeManagment.UI.Forms
             await _gradeRepository.DeleteAsync(deletedId);
         }
 
-        private async Task EditAsync()
+        private async Task UpdateAsync()
         {
             var selectedGradeId = GradesDataGridView.GetId();
             var selectedGrade = await _gradeRepository.GetAsync(selectedGradeId);

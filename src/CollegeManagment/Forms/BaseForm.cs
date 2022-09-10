@@ -10,7 +10,6 @@ namespace CollegeManagment.UI.Forms
 
         public BaseForm() => _dbContext = new CollegeManagmentContext();
 
-
         protected void ShowErrorMessageBox(string message)
             => MessageBox.Show(
                     message, MessageProvider.InvalidFields,

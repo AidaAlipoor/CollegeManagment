@@ -11,6 +11,6 @@ namespace DataAccess.Entities
         public int IdNumber { get; set; }
         public virtual List<Grade> Grades { get; set; }
 
-        public const long IdNumberLengthLimit = 10;
+        public const int IdNumberLengthLimit = 10;
     }
 }

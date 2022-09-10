@@ -62,7 +62,7 @@ namespace CollegeManagment.UI.Forms
         {
             try
             {
-                await EditAsync();
+                await UpdateAsync();
                 await _teacherCourseRepository.SaveAsync();
                 await RefreshDataGridViewAsync();
                 MessageBox.Show(MessageProvider.ItemIsEdited);
@@ -119,7 +119,7 @@ namespace CollegeManagment.UI.Forms
             await _teacherCourseRepository.DeleteAsync(teacherId);
         }
 
-        private async Task EditAsync()
+        private async Task UpdateAsync()
         {
             var selectedTeacherCourseId = teacherCoursesDataGridView.GetId();
             var selectedTeacherCourse = await _teacherCourseRepository.GetAsync((int)selectedTeacherCourseId);

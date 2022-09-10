@@ -151,8 +151,8 @@ namespace CollegeManagment.UI.Forms
             var newData = await _repository.GetAsync(selectedRowId);
 
             newData.StudentName = StudentNameTextBox.Text;
-            newData.StudentLastName = StudentLastNameTextBox.Text;
-            newData.IdNumber = IntConvertor.ToInt(StudentIdNumberTextBox.Text);
+             newData.StudentLastName = StudentLastNameTextBox.Text;
+            newData.IdNumber = (int)Convert.ToInt64(StudentIdNumberTextBox.Text);
         }
 
         private void EditGridViewItems()

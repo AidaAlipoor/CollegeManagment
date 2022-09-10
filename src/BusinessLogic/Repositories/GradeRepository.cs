@@ -50,7 +50,7 @@ namespace BusinessLogic.Repositories
         private bool IsGradeValid(GradeEntity entity) =>  IsGradeValueValid(entity.Score);
         private bool IsGradeValueValid(int score)
         {
-            return score >= 0 && score <= GradeEntity.ScoreLengthLimit;
+            return score >= 0 && score <= GradeEntity.ScoreNumberLimit;
         }
 
     }

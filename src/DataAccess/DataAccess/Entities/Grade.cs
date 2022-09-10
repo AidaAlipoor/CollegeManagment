@@ -7,6 +7,6 @@
         public virtual Student Students { get; set; }
         public virtual TeacherCourse TeacherCourse { get; set; }
 
-        public const int ScoreLengthLimit = 20;
+        public const int ScoreNumberLimit = 20;
     }
 }
