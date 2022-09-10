@@ -11,9 +11,6 @@ namespace BusinessLogic.Repositories
 {
     public class GradeRepository : Repository<GradeEntity>
     {
-        public GradeRepository(CollegeManagmentContext dbContext) 
-            : base(dbContext) { }
-
         public override void Add(GradeEntity entity)
         {
             if (!IsGradeValid(entity))

@@ -10,14 +10,10 @@ namespace BusinessLogic.Repositories
 {
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        protected readonly CollegeManagmentContext dbContext;
+        protected readonly CollegeManagmentContext dbContext = CollegeManagmentContext.GetInstance();
         private readonly DbSet<TEntity> _dbSet;
 
-        public Repository(CollegeManagmentContext dbContext)
-        {
-            this.dbContext = dbContext;
-            _dbSet = dbContext.Set<TEntity>();
-        }
+        public Repository() => _dbSet = dbContext.Set<TEntity>();
 
         public virtual void Add(TEntity entity) => _dbSet.Add(entity);
 

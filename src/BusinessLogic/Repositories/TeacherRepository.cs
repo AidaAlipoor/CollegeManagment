@@ -11,8 +11,6 @@ namespace BusinessLogic.Repositories
 {
     public class TeacherRepository : Repository<TeacherEntity> 
     {
-        public TeacherRepository() : base(CollegeManagmentContext.GetInstance()) { }
-
         public override void Add(TeacherEntity entity)
         {
             if (!IsTeacherValid(entity))

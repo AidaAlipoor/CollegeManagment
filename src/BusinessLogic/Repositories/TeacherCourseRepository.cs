@@ -9,7 +9,7 @@ namespace BusinessLogic.Repositories
 {
     public class TeacherCourseRepository : Repository<TeacherCourse>
     {
-        public TeacherCourseRepository() : base(CollegeManagmentContext.GetInstance()) { }
+        public TeacherCourseRepository() : base() { }
 
         public override void Add(TeacherCourse entity)
         {

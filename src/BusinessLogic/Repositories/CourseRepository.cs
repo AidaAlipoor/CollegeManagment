@@ -12,8 +12,6 @@ namespace BusinessLogic.Repositories
 {
     public class CourseRepository : Repository<CourseEntity>
     {
-        public CourseRepository(): base(CollegeManagmentContext.GetInstance()) { }
-
         public override void Add(CourseEntity entity)
         {
             if (!IsCourseValid(entity))
