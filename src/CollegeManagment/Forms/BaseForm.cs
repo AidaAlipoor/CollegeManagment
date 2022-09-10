@@ -8,7 +8,7 @@ namespace CollegeManagment.UI.Forms
     {
         protected readonly CollegeManagmentContext _dbContext;
 
-        public BaseForm() => _dbContext = new CollegeManagmentContext();
+        public BaseForm() => _dbContext = CollegeManagmentContext.GetInstance();
 
         protected void ShowErrorMessageBox(string message)
             => MessageBox.Show(

@@ -25,7 +25,7 @@ namespace CollegeManagment.UI.Forms
         {
             InitializeComponent();
 
-            CollegeManagmentContext dbContext = new CollegeManagmentContext();
+            var dbContext = CollegeManagmentContext.GetInstance();
 
             _teacherCourseRepository = new TeacherCourseRepository(dbContext);
             _gradeRepository = new GradeRepository(dbContext);
@@ -41,7 +41,7 @@ namespace CollegeManagment.UI.Forms
                 await RefreshDataGridViewAsync();
                 MessageBox.Show(MessageProvider.ItemAddedSuccesfully);
             }
-            catch (Exception )
+            catch (Exception)
             {
                 ShowErrorMessageBox(MessageProvider.InvalidFields);
             }
@@ -55,7 +55,7 @@ namespace CollegeManagment.UI.Forms
                 await RefreshDataGridViewAsync();
                 MessageBox.Show(MessageProvider.ItemIsDeleted);
             }
-            catch (Exception )
+            catch (Exception)
             {
                 MessageBox.Show(MessageProvider.ItemIsNotDeletable);
             }
@@ -108,7 +108,7 @@ namespace CollegeManagment.UI.Forms
             };
 
             _gradeRepository.Add(addingTeacherCourse);
-           
+
         }
 
         private async Task InsertGradeAsync()

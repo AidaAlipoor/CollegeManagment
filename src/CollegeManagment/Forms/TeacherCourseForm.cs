@@ -20,11 +20,11 @@ namespace CollegeManagment.UI.Forms
         public TeacherCourseForm() : base()
         {
             InitializeComponent();
-            
-            CollegeManagmentContext dbContext = new CollegeManagmentContext();
+
+            var dbContext = CollegeManagmentContext.GetInstance();
 
             _teacherCourseRepository = new TeacherCourseRepository(dbContext);
-            _teacherRepository = new TeacherRepository(dbContext);
+            _teacherRepository = new TeacherRepository();
             _courseRepository = new CourseRepository(dbContext);
         }
 
@@ -34,13 +34,13 @@ namespace CollegeManagment.UI.Forms
             {
                 await InsertTeacherCourseAsync();
                 await _teacherCourseRepository.SaveAsync();
-                await RefreshDataGridViewAsync(); 
+                await RefreshDataGridViewAsync();
 
                 MessageBox.Show(MessageProvider.ItemAddedSuccesfully);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message.ToString(), MessageProvider.InvalidFields , MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message.ToString(), MessageProvider.InvalidFields, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private async void DeleteButton_Click(object sender, EventArgs e)
