@@ -11,8 +11,7 @@ namespace BusinessLogic.Repositories
 {
     public class StudentRepository : Repository<StudentEntity>
     {
-        public StudentRepository(CollegeManagmentContext dbContext)
-            : base(dbContext) { }
+        public StudentRepository() : base(CollegeManagmentContext.GetInstance()) { }
 
         public override void Add(StudentEntity entity)
         {

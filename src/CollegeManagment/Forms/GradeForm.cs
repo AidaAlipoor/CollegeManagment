@@ -29,7 +29,7 @@ namespace CollegeManagment.UI.Forms
 
             _teacherCourseRepository = new TeacherCourseRepository();
             _gradeRepository = new GradeRepository(dbContext);
-            _studentRepository = new StudentRepository(dbContext);
+            _studentRepository = new StudentRepository();
         }
 
         private async void AddButton_Click(object sender, EventArgs e)

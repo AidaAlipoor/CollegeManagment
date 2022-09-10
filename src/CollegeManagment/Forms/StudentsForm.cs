@@ -14,7 +14,7 @@ namespace CollegeManagment.UI.Forms
         public StudentsForm()
         {
             InitializeComponent();
-            _repository = new StudentRepository(CollegeManagmentContext.GetInstance());
+            _repository = new StudentRepository();
         }
 
         private async void AddButton_Click(object sender, EventArgs e)
