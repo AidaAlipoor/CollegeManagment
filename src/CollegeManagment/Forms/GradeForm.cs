@@ -6,14 +6,30 @@ using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UI.Extensions;
+using BusinessLogic.Repositories;
+using TeacherCourseEntity = DataAccess.Entities.TeacherCourse;
+using GradeEntity = DataAccess.Entities.Grade;
+using StudentEntity = DataAccess.Entities.Student;
+using DataAccess.EntitiesConfiguration;
 
 namespace CollegeManagment.UI.Forms
 {
     public partial class GradeForm : BaseForm
     {
+        private readonly IRepository<GradeEntity> _gradeRepository;
+        private readonly IRepository<TeacherCourseEntity> _teacherCourseRepository;
+        private readonly IRepository<StudentEntity> _studentRepository;
+
+
         public GradeForm()
         {
             InitializeComponent();
+
+            CollegeManagmentContext dbContext = new CollegeManagmentContext();
+
+            _teacherCourseRepository = new TeacherCourseRepository(dbContext);
+            _gradeRepository = new GradeRepository(dbContext);
+            _studentRepository = new StudentRepository(dbContext);
         }
 
         private async void AddButton_Click(object sender, EventArgs e)
@@ -21,13 +37,13 @@ namespace CollegeManagment.UI.Forms
             try
             {
                 await InsertGradeAsync();
-                await SaveChangesAsync();
+                await _gradeRepository.SaveAsync();
                 await RefreshDataGridViewAsync();
                 MessageBox.Show(MessageProvider.ItemAddedSuccesfully);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                ShowErrorMessageBox(ex.Message);
+                ShowErrorMessageBox(MessageProvider.InvalidFields);
             }
         }
         private async void DeleteButton_Click(object sender, EventArgs e)
@@ -35,14 +51,13 @@ namespace CollegeManagment.UI.Forms
             try
             {
                 await DeleteAsync();
-                await SaveChangesAsync();
-
+                await _gradeRepository.SaveAsync();
                 await RefreshDataGridViewAsync();
                 MessageBox.Show(MessageProvider.ItemIsDeleted);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                MessageBox.Show(ex.Message.ToString(), MessageProvider.ItemIsDeleted, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(MessageProvider.ItemIsNotDeletable);
             }
         }
         private async void EditButton_Click(object sender, EventArgs e)
@@ -50,7 +65,7 @@ namespace CollegeManagment.UI.Forms
             try
             {
                 await EditAsync();
-                await SaveChangesAsync();
+                await _gradeRepository.SaveAsync();
 
                 await RefreshDataGridViewAsync();
                 MessageBox.Show(MessageProvider.ItemIsEdited);
@@ -68,32 +83,32 @@ namespace CollegeManagment.UI.Forms
         }
 
 
-        private bool IsGradeValid() => !IsGradeEmpty() && IsGradeValueValid();
-        private bool IsGradeEmpty() => string.IsNullOrEmpty(GradeTextBox.Text)
-            && string.IsNullOrWhiteSpace(GradeTextBox.Text);
-        private bool IsGradeValueValid()
+        //private bool IsGradeValid() => !IsGradeEmpty() && IsGradeValueValid();
+        //private bool IsGradeEmpty() => string.IsNullOrEmpty(GradeTextBox.Text)
+        //    && string.IsNullOrWhiteSpace(GradeTextBox.Text);
+        //private bool IsGradeValueValid()     
+        //{
+        //    var score = GradeTextBox.Text;
+
+        //    return int.TryParse(score, out _) && IntConvertor.ToInt(score) >= 0
+        //        && IntConvertor.ToInt(score) <= Grade.ScoreLengthLimit;
+        //}
+
+
+        private void InsertGradeAsync(TeacherCourseEntity teacherCourse, StudentEntity student, int score)
         {
-            var score = GradeTextBox.Text;
+            //if (!IsGradeValid())
+            //    throw new Exception();
 
-            return int.TryParse(score, out _) && IntConvertor.ToInt(score) >= 0
-                && IntConvertor.ToInt(score) <= Grade.ScoreLengthLimit;
-        }
-
-
-        private Task InsertGradeAsync(TeacherCourse teacherCourse, Student student, int score)
-        {
-            if (!IsGradeValid())
-                throw new Exception();
-
-            var addingTeacherCourse = new Grade
+            var addingTeacherCourse = new GradeEntity
             {
                 TeacherCourse = teacherCourse,
                 Students = student,
                 Score = score,
             };
 
-            _dbContext.Grades.Add(addingTeacherCourse);
-            return Task.CompletedTask;
+            _gradeRepository.Add(addingTeacherCourse);
+           
         }
 
         private async Task InsertGradeAsync()
@@ -102,23 +117,23 @@ namespace CollegeManagment.UI.Forms
             var student = await GetSelectedStudentEntityAsync();
             var scoreValue = IntConvertor.ToInt(GradeTextBox.Text);
 
-            await InsertGradeAsync(teacherCourse, student, scoreValue);
+            InsertGradeAsync(teacherCourse, student, scoreValue);
 
             return;
         }
 
-        private async Task<TeacherCourse> GetSelectedTeacherCourseEntityAsync()
+        private async Task<TeacherCourseEntity> GetSelectedTeacherCourseEntityAsync()
         {
-            var selectedCourseId = teacherCoursesComboBox.GetSelectedItem().Value;
+            var selectedTeacherCourseId = teacherCoursesComboBox.GetSelectedItem().Value;
 
-            return await _dbContext.TeacherCourses.FindAsync(selectedCourseId);
+            return await _teacherCourseRepository.GetAsync((int)selectedTeacherCourseId);
         }
 
-        private async Task<Student> GetSelectedStudentEntityAsync()
+        private async Task<StudentEntity> GetSelectedStudentEntityAsync()
         {
-            var selectedCourseId = studentComboBox.GetSelectedItem().Value;
+            var selectedStudentId = studentComboBox.GetSelectedItem().Value;
 
-            return await _dbContext.Students.FindAsync(selectedCourseId);
+            return await _studentRepository.GetAsync((int)selectedStudentId);
         }
 
 
@@ -129,22 +144,20 @@ namespace CollegeManagment.UI.Forms
                 throw new Exception();
 
             var deletedId = GradesDataGridView.GetId();
-            var removeGrade = await _dbContext.Grades.FindAsync(deletedId);
-
-            _dbContext.Grades.Remove(removeGrade);
+            await _gradeRepository.DeleteAsync(deletedId);
         }
 
         private async Task EditAsync()
         {
             var selectedGradeId = GradesDataGridView.GetId();
-            var selectedGrade = await _dbContext.Grades.FindAsync(selectedGradeId);
+            var selectedGrade = await _gradeRepository.GetAsync(selectedGradeId);
 
 
             var selectedTeachCourseId = teacherCoursesComboBox.GetSelectedItem().Value;
-            var selectedTeacherCourse = await _dbContext.TeacherCourses.FindAsync(selectedTeachCourseId);
+            var selectedTeacherCourse = await _teacherCourseRepository.GetAsync((int)selectedTeachCourseId);
 
             var selectedStudentId = studentComboBox.GetSelectedItem().Value;
-            var SelectedStudent = await _dbContext.Students.FindAsync(selectedStudentId);
+            var SelectedStudent = await _studentRepository.GetAsync((int)selectedStudentId);
 
 
             selectedGrade.TeacherCourse = selectedTeacherCourse;
@@ -156,7 +169,7 @@ namespace CollegeManagment.UI.Forms
         {
             GradesDataGridView.Rows.Clear();
 
-            var grade = await _dbContext.Grades.ToArrayAsync();
+            var grade = await _gradeRepository.GetAsync();
 
             foreach (var item in grade)
                 GradesDataGridView.Rows
@@ -168,13 +181,13 @@ namespace CollegeManagment.UI.Forms
 
         private void AddColumnToGridView()
         {
-            var idColumn = nameof(Grade.Id);
-            var courseNameColumn = nameof(Grade.TeacherCourse.Course.CourseName);
-            var teacherNameColumn = nameof(Grade.TeacherCourse.Teacher.TeacherName);
-            var teacherLastNameColumn = nameof(Grade.TeacherCourse.Teacher.TeacherLastName);
-            var studentNameColumn = nameof(Grade.Students.StudentName);
-            var studentLastNameColumn = nameof(Grade.Students.StudentLastName);
-            var scoreColumn = nameof(Grade.Score);
+            var idColumn = nameof(GradeEntity.Id);
+            var courseNameColumn = nameof(GradeEntity.TeacherCourse.Course.CourseName);
+            var teacherNameColumn = nameof(GradeEntity.TeacherCourse.Teacher.TeacherName);
+            var teacherLastNameColumn = nameof(GradeEntity.TeacherCourse.Teacher.TeacherLastName);
+            var studentNameColumn = nameof(GradeEntity.Students.StudentName);
+            var studentLastNameColumn = nameof(GradeEntity.Students.StudentLastName);
+            var scoreColumn = nameof(GradeEntity.Score);
 
             var isReadOnly = true;
 
@@ -190,7 +203,7 @@ namespace CollegeManagment.UI.Forms
 
         private async Task LoadDataInTeacherCoursesComboBoxAsync()
         {
-            var teacherCourses = await _dbContext.TeacherCourses.ToArrayAsync();
+            var teacherCourses = await _teacherCourseRepository.GetAsync();
 
             foreach (var tc in teacherCourses)
                 teacherCoursesComboBox.Items.Add(
@@ -206,7 +219,7 @@ namespace CollegeManagment.UI.Forms
 
         private async Task LoadDataInStudentComboBoxAsync()
         {
-            var students = await _dbContext.Students.ToArrayAsync();
+            var students = await _studentRepository.GetAsync();
 
             foreach (var student in students)
                 studentComboBox.Items.Add(

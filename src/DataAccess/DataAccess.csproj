@@ -54,21 +54,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\202208201051339_initDatabase.cs" />
-    <Compile Include="Migrations\202208201051339_initDatabase.Designer.cs">
-      <DependentUpon>202208201051339_initDatabase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202208271123440_configurationsUpdated.cs" />
-    <Compile Include="Migrations\202208271123440_configurationsUpdated.Designer.cs">
-      <DependentUpon>202208271123440_configurationsUpdated.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202208290950510_initEntities.cs" />
-    <Compile Include="Migrations\202208290950510_initEntities.Designer.cs">
-      <DependentUpon>202208290950510_initEntities.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202209071122236_EditStudentEntity.cs" />
-    <Compile Include="Migrations\202209071122236_EditStudentEntity.designer.cs">
-      <DependentUpon>202209071122236_EditStudentEntity.cs</DependentUpon>
+    <Compile Include="Migrations\202209100953066_InitDatabase.cs" />
+    <Compile Include="Migrations\202209100953066_InitDatabase.designer.cs">
+      <DependentUpon>202209100953066_InitDatabase.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -85,22 +73,13 @@
     <Compile Include="DataAccess\Entities\TeacherCourse.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202208201051339_initDatabase.resx">
-      <DependentUpon>202208201051339_initDatabase.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202208271123440_configurationsUpdated.resx">
-      <DependentUpon>202208271123440_configurationsUpdated.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202208290950510_initEntities.resx">
-      <DependentUpon>202208290950510_initEntities.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202209071122236_EditStudentEntity.resx">
-      <DependentUpon>202209071122236_EditStudentEntity.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202209100953066_InitDatabase.resx">
+      <DependentUpon>202209100953066_InitDatabase.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
