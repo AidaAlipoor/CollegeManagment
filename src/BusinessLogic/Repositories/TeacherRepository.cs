@@ -1,4 +1,5 @@
-﻿using DataAccess.EntitiesConfiguration;
+﻿using BusinessLogic.ViewModels;
+using DataAccess.EntitiesConfiguration;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -9,7 +10,7 @@ using TeacherEntity = DataAccess.Entities.Teacher;
 
 namespace BusinessLogic.Repositories
 {
-    public class TeacherRepository : Repository<TeacherEntity> 
+    public class TeacherRepository : Repository<TeacherEntity>, ITeacherRepository
     {
         public override void Add(TeacherEntity entity)
         {
@@ -26,17 +27,31 @@ namespace BusinessLogic.Repositories
         }
         public override void Update(TeacherEntity entity)
         {
-            if(!IsTeacherValid(entity))
+            if (!IsTeacherValid(entity))
                 throw new Exception();
 
             base.Update(entity);
         }
 
         public override Task DeleteAsync(int id) => base.DeleteAsync(id);
+
         public override Task<List<TeacherEntity>> FetchAsync() => base.FetchAsync();
         public override Task<TeacherEntity> FetchAsync(int id) => base.FetchAsync(id);
         public override Task<List<TeacherEntity>> FetchAsync(Expression<Func<TeacherEntity, bool>> predicate)
             => base.FetchAsync(predicate);
+
+        public async Task<List<TeacherViewModel>> GetAsync()
+        {
+            return await dbContext.Teachers
+                .Select(t => new TeacherViewModel
+                {
+                    Id = t.Id,
+                    Name = t.TeacherName,
+                    Lastname = t.TeacherLastName,
+                    Birthday = t.Birthday
+                })
+                .ToListAsync();
+        }
 
 
         private bool IsTeacherValid(TeacherEntity entity)
@@ -69,5 +84,6 @@ namespace BusinessLogic.Repositories
             if (isTeacherUsedAtTeacherCourses)
                 throw new Exception();
         }
+
     }
 }

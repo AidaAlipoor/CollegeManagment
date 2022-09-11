@@ -7,14 +7,15 @@ namespace WebAPI.Controllers
 {
     public class TeacherController : ApiController
     {
-        public TeacherController() { }
+        
+        public TeacherController() {}
 
         [HttpGet]
         public async Task<IHttpActionResult> Get()
         {
             var repository = new TeacherRepository();
 
-            var teachers = await repository.FetchAsync();
+            var teachers = await repository.GetAsync();
 
             return Ok(teachers);
         }
