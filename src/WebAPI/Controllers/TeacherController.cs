@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BusinessLogic.Repositories;
+using System;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -6,10 +7,16 @@ namespace WebAPI.Controllers
 {
     public class TeacherController : ApiController
     {
+        public TeacherController() { }
+
         [HttpGet]
         public async Task<IHttpActionResult> Get()
         {
-            return  Ok(new[] { "Test", "Test test", "Chi miiiigiiiii test?" });
+            var repository = new TeacherRepository();
+
+            var teachers = await repository.GetAsync();
+
+            return Ok(teachers);
         }
 
         [HttpPost]

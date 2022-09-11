@@ -14,8 +14,15 @@ namespace WebAPI
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
+
+            GlobalConfiguration.Configuration
+                .Formatters
+                .JsonFormatter
+                .SerializerSettings
+                .ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+
             GlobalConfiguration.Configure(WebApiConfig.Register);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
+
         }
     }
 }

@@ -59,6 +59,7 @@
     <Compile Include="Repositories\StudentRepository.cs" />
     <Compile Include="Repositories\TeacherCourseRepository.cs" />
     <Compile Include="Repositories\TeacherRepository.cs" />
+    <Compile Include="ViewModels\TeacherViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataAccess\DataAccess.csproj">
