@@ -147,7 +147,7 @@ namespace CollegeManagment.UI.Forms
             //    throw new Exception();
 
             var selectedRowId = teachersDataGridView.GetId();
-            var selectedTeacher = await _repository.GetAsync(selectedRowId);
+            var selectedTeacher = await _repository.FetchAsync(selectedRowId);
 
             _repository.Update(selectedTeacher);
             selectedTeacher.TeacherName = teacherNameTextBox.Text;
@@ -159,7 +159,7 @@ namespace CollegeManagment.UI.Forms
         {
             teachersDataGridView.Rows.Clear();
 
-            var teachers = await _repository.GetAsync();
+            var teachers = await _repository.FetchAsync();
 
             foreach (var teacher in teachers)
                 teachersDataGridView.Rows

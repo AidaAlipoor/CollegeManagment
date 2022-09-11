@@ -14,7 +14,7 @@ namespace WebAPI.Controllers
         {
             var repository = new TeacherRepository();
 
-            var teachers = await repository.GetAsync();
+            var teachers = await repository.FetchAsync();
 
             return Ok(teachers);
         }

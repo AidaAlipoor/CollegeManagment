@@ -114,7 +114,7 @@ namespace CollegeManagment.UI.Forms
         {
             StudentsDataGridView.Rows.Clear();
 
-            var students = await _repository.GetAsync();
+            var students = await _repository.FetchAsync();
 
             foreach (var student in students)
                 StudentsDataGridView.Rows
@@ -148,7 +148,7 @@ namespace CollegeManagment.UI.Forms
             //    throw new Exception();
 
             var selectedRowId = StudentsDataGridView.GetId();
-            var newData = await _repository.GetAsync(selectedRowId);
+            var newData = await _repository.FetchAsync(selectedRowId);
 
             newData.StudentName = StudentNameTextBox.Text;
              newData.StudentLastName = StudentLastNameTextBox.Text;

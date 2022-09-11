@@ -126,14 +126,14 @@ namespace CollegeManagment.UI.Forms
         {
             var selectedTeacherCourseId = teacherCoursesComboBox.GetSelectedItem().Value;
 
-            return await _teacherCourseRepository.GetAsync((int)selectedTeacherCourseId);
+            return await _teacherCourseRepository.FetchAsync((int)selectedTeacherCourseId);
         }
 
         private async Task<StudentEntity> GetSelectedStudentEntityAsync()
         {
             var selectedStudentId = studentComboBox.GetSelectedItem().Value;
 
-            return await _studentRepository.GetAsync((int)selectedStudentId);
+            return await _studentRepository.FetchAsync((int)selectedStudentId);
         }
 
 
@@ -150,14 +150,14 @@ namespace CollegeManagment.UI.Forms
         private async Task UpdateAsync()
         {
             var selectedGradeId = GradesDataGridView.GetId();
-            var selectedGrade = await _gradeRepository.GetAsync(selectedGradeId);
+            var selectedGrade = await _gradeRepository.FetchAsync(selectedGradeId);
 
 
             var selectedTeachCourseId = teacherCoursesComboBox.GetSelectedItem().Value;
-            var selectedTeacherCourse = await _teacherCourseRepository.GetAsync((int)selectedTeachCourseId);
+            var selectedTeacherCourse = await _teacherCourseRepository.FetchAsync((int)selectedTeachCourseId);
 
             var selectedStudentId = studentComboBox.GetSelectedItem().Value;
-            var SelectedStudent = await _studentRepository.GetAsync((int)selectedStudentId);
+            var SelectedStudent = await _studentRepository.FetchAsync((int)selectedStudentId);
 
 
             selectedGrade.TeacherCourse = selectedTeacherCourse;
@@ -169,7 +169,7 @@ namespace CollegeManagment.UI.Forms
         {
             GradesDataGridView.Rows.Clear();
 
-            var grade = await _gradeRepository.GetAsync();
+            var grade = await _gradeRepository.FetchAsync();
 
             foreach (var item in grade)
                 GradesDataGridView.Rows
@@ -203,7 +203,7 @@ namespace CollegeManagment.UI.Forms
 
         private async Task LoadDataInTeacherCoursesComboBoxAsync()
         {
-            var teacherCourses = await _teacherCourseRepository.GetAsync();
+            var teacherCourses = await _teacherCourseRepository.FetchAsync();
 
             foreach (var tc in teacherCourses)
                 teacherCoursesComboBox.Items.Add(
@@ -219,7 +219,7 @@ namespace CollegeManagment.UI.Forms
 
         private async Task LoadDataInStudentComboBoxAsync()
         {
-            var students = await _studentRepository.GetAsync();
+            var students = await _studentRepository.FetchAsync();
 
             foreach (var student in students)
                 studentComboBox.Items.Add(

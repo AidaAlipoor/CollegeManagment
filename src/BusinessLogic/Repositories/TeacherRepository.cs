@@ -33,10 +33,10 @@ namespace BusinessLogic.Repositories
         }
 
         public override Task DeleteAsync(int id) => base.DeleteAsync(id);
-        public override Task<List<TeacherEntity>> GetAsync() => base.GetAsync();
-        public override Task<TeacherEntity> GetAsync(int id) => base.GetAsync(id);
-        public override Task<List<TeacherEntity>> GetAsync(Expression<Func<TeacherEntity, bool>> predicate)
-            => base.GetAsync(predicate);
+        public override Task<List<TeacherEntity>> FetchAsync() => base.FetchAsync();
+        public override Task<TeacherEntity> FetchAsync(int id) => base.FetchAsync(id);
+        public override Task<List<TeacherEntity>> FetchAsync(Expression<Func<TeacherEntity, bool>> predicate)
+            => base.FetchAsync(predicate);
 
 
         private bool IsTeacherValid(TeacherEntity entity)

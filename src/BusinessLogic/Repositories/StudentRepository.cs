@@ -31,17 +31,17 @@ namespace BusinessLogic.Repositories
         {
             return base.DeleteAsync(id);
         }
-        public override Task<List<StudentEntity>> GetAsync()
+        public override Task<List<StudentEntity>> FetchAsync()
         {
-            return base.GetAsync();
+            return base.FetchAsync();
         }
-        public override Task<StudentEntity> GetAsync(int id)
+        public override Task<StudentEntity> FetchAsync(int id)
         {
-            return base.GetAsync(id);
+            return base.FetchAsync(id);
         }
-        public override Task<List<StudentEntity>> GetAsync(Expression<Func<StudentEntity, bool>> predicate)
+        public override Task<List<StudentEntity>> FetchAsync(Expression<Func<StudentEntity, bool>> predicate)
         {
-            return base.GetAsync(predicate);
+            return base.FetchAsync(predicate);
         }
 
         private bool IsStudentValid(StudentEntity entity)

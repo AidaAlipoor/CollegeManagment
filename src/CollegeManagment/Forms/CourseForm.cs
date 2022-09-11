@@ -101,7 +101,7 @@ namespace CollegeManagment.UI.Forms
         {
             CoursesDataGridView.Rows.Clear();
 
-            var courses = await _courseRepository.GetAsync();
+            var courses = await _courseRepository.FetchAsync();
 
             foreach (var course in courses)
                 CoursesDataGridView.Rows
@@ -129,7 +129,7 @@ namespace CollegeManagment.UI.Forms
             //    throw new Exception();
 
             var selectedRowId = CoursesDataGridView.GetId();
-            var newData = await _courseRepository.GetAsync(selectedRowId);
+            var newData = await _courseRepository.FetchAsync(selectedRowId);
 
             newData.CourseName = CourseNameTextBox.Text;
 

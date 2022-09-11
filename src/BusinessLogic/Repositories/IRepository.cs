@@ -7,9 +7,9 @@ namespace BusinessLogic.Repositories
 {
     public interface IRepository<TEntity> where TEntity : class 
     {
-        Task <TEntity> GetAsync(int id);
-        Task <List<TEntity>> GetAsync();
-        Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate);
+        Task <TEntity> FetchAsync(int id);
+        Task <List<TEntity>> FetchAsync();
+        Task<List<TEntity>> FetchAsync(Expression<Func<TEntity, bool>> predicate);
         void Add(TEntity entity);
         void Delete(TEntity entity);
         Task DeleteAsync(int id);

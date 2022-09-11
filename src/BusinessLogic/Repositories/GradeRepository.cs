@@ -31,17 +31,17 @@ namespace BusinessLogic.Repositories
         {
             return base.DeleteAsync(id);
         }
-        public override Task<List<GradeEntity>> GetAsync()
+        public override Task<List<GradeEntity>> FetchAsync()
         {
-            return base.GetAsync();
+            return base.FetchAsync();
         }
-        public override Task<GradeEntity> GetAsync(int id)
+        public override Task<GradeEntity> FetchAsync(int id)
         {
-            return base.GetAsync(id);
+            return base.FetchAsync(id);
         }
-        public override Task<List<GradeEntity>> GetAsync(Expression<Func<GradeEntity, bool>> predicate)
+        public override Task<List<GradeEntity>> FetchAsync(Expression<Func<GradeEntity, bool>> predicate)
         {
-            return base.GetAsync(predicate);
+            return base.FetchAsync(predicate);
         }
 
         private bool IsGradeValid(GradeEntity entity) =>  IsGradeValueValid(entity.Score);

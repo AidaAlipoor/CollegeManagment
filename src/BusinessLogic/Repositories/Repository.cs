@@ -28,16 +28,16 @@ namespace BusinessLogic.Repositories
 
         public virtual async Task DeleteAsync(int id)
         {
-            var entity = await GetAsync(id);
+            var entity = await FetchAsync(id);
 
             Delete(entity);
         }
 
-        public virtual async Task<TEntity> GetAsync(int id) => await _dbSet.FindAsync(id);
+        public virtual async Task<TEntity> FetchAsync(int id) => await _dbSet.FindAsync(id);
 
-        public virtual async Task<List<TEntity>> GetAsync() => await _dbSet.ToListAsync();
+        public virtual async Task<List<TEntity>> FetchAsync() => await _dbSet.ToListAsync();
 
-        public virtual async Task<List<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<List<TEntity>> FetchAsync(Expression<Func<TEntity, bool>> predicate)
             => await _dbSet.Where(predicate).ToListAsync();
 
         public virtual async Task SaveAsync() => await dbContext.SaveChangesAsync();
