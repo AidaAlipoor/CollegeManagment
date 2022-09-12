@@ -11,6 +11,8 @@ namespace BusinessLogic.Repositories
 {
     public class TeacherRepository : Repository<TeacherEntity>, ITeacherRepository
     {
+        public IReadOnlyList<int> InsertedIds { get; private set; }
+
         public override void Add(TeacherEntity entity)
         {
             ValidateTeacher(entity);
@@ -37,11 +39,16 @@ namespace BusinessLogic.Repositories
         public override Task<List<TeacherEntity>> FetchAsync(Expression<Func<TeacherEntity, bool>> predicate)
             => base.FetchAsync(predicate);
 
-        public override Task SaveAsync()
+        public override async Task SaveAsync()
         {
-            
+            var addedEntities = dbContext.ChangeTracker
+                .Entries<TeacherEntity>()
+                .Where(t => t.State == EntityState.Added)
+                .ToArray();
 
-            return base.SaveAsync();
+            await base.SaveAsync();
+
+            InsertedIds = addedEntities.Select(t => t.Entity.Id).ToList();
         }
 
         public async Task<List<TeacherViewModel>> GetAsync()
@@ -56,8 +63,7 @@ namespace BusinessLogic.Repositories
                 })
                 .ToListAsync();
         }
-
-        public int Insert(string name, string lastname, DateTime birthday)
+        public void Insert(string name, string lastname, DateTime birthday)
         {
             var teacher = new TeacherEntity
             {
@@ -67,9 +73,26 @@ namespace BusinessLogic.Repositories
             };
 
             Add(teacher);
-
-            return teacher.Id;
         }
+        public async Task UpdateAsync(int id, string name, string lastname, DateTime birthday)
+        {
+            var teacher = await FetchAsync(id);
+
+            teacher.TeacherName = name;
+            teacher.TeacherLastName = lastname;
+            teacher.Birthday = birthday;
+
+            Update(teacher);
+        }
+        public async Task Delete(int id)
+        {
+            CheckIsIdExist(id);
+
+            var teacherEntity = await FetchAsync(id);
+            
+           Delete(teacherEntity);
+        }
+
 
 
         private void ValidateTeacher(TeacherEntity entity)
@@ -104,7 +127,15 @@ namespace BusinessLogic.Repositories
                 .Any(tc => tc.Teacher.Id == entity.Id);
 
             if (isTeacherUsedAtTeacherCourses)
-                throw new Exception();
+                throw new Exception("This item can not be deleted! ");
+        }
+
+        private void CheckIsIdExist(int id)
+        {
+            var isIdExistInTeacher = dbContext.Teachers.Any(t => t.Id == id);
+            if (!isIdExistInTeacher)
+                throw new Exception("this id does not exist");
+            
         }
 
     }

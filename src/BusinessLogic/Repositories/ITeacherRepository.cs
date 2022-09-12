@@ -7,9 +7,12 @@ using System.Threading.Tasks;
 namespace BusinessLogic.Repositories
 {
     public interface ITeacherRepository : IRepository<Teacher>
-    {    
-        Task <List<TeacherViewModel>> GetAsync();
+    {
+        IReadOnlyList<int> InsertedIds { get; }
 
-        int Insert(string name, string lastname, DateTime birthday);
+        Task<List<TeacherViewModel>> GetAsync();
+        void Insert(string name, string lastname, DateTime birthday);
+        Task UpdateAsync(int id, string name, string lastname, DateTime birthday);
+        Task Delete(int id);
     }
 }

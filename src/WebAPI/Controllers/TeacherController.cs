@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.Repositories;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using WebAPI.DTOs;
@@ -22,23 +23,33 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<IHttpActionResult> Post(TeacherDto teacherDto)
         {
-            var id = _repository.Insert(teacherDto.Name, teacherDto.Lastname, teacherDto.BirthDay);
+            _repository.Insert(teacherDto.Name, teacherDto.Lastname, teacherDto.BirthDay);
 
             await _repository.SaveAsync();
+
+            var id = _repository.InsertedIds.Single();
 
             return Ok(id);
         }
 
         [HttpPut]
-        public async Task<IHttpActionResult> Put()
+        public async Task<IHttpActionResult> Put(int id, TeacherDto teacherDto)
         {
-            throw new NotImplementedException();
+            await _repository.UpdateAsync(id, teacherDto.Name, teacherDto.Lastname, teacherDto.BirthDay);
+
+            await _repository.SaveAsync();
+
+            return Ok();
         }
 
         [HttpDelete]
-        public async Task<IHttpActionResult> Delete()
+        public async Task<IHttpActionResult> Delete(int id)
         {
-            throw new NotImplementedException();
+            await _repository.Delete(id);
+
+            await _repository.SaveAsync(); 
+            
+            return Ok();
         }
     }
 }
