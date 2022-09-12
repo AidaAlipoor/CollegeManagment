@@ -1,5 +1,4 @@
 ﻿using BusinessLogic.ViewModels;
-using DataAccess.EntitiesConfiguration;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -14,8 +13,7 @@ namespace BusinessLogic.Repositories
     {
         public override void Add(TeacherEntity entity)
         {
-            if (!IsTeacherValid(entity))
-                throw new Exception();
+            ValidateTeacher(entity);
 
             base.Add(entity);
         }
@@ -27,8 +25,7 @@ namespace BusinessLogic.Repositories
         }
         public override void Update(TeacherEntity entity)
         {
-            if (!IsTeacherValid(entity))
-                throw new Exception();
+            ValidateTeacher(entity);
 
             base.Update(entity);
         }
@@ -39,6 +36,13 @@ namespace BusinessLogic.Repositories
         public override Task<TeacherEntity> FetchAsync(int id) => base.FetchAsync(id);
         public override Task<List<TeacherEntity>> FetchAsync(Expression<Func<TeacherEntity, bool>> predicate)
             => base.FetchAsync(predicate);
+
+        public override Task SaveAsync()
+        {
+            
+
+            return base.SaveAsync();
+        }
 
         public async Task<List<TeacherViewModel>> GetAsync()
         {
@@ -53,12 +57,29 @@ namespace BusinessLogic.Repositories
                 .ToListAsync();
         }
 
-
-        private bool IsTeacherValid(TeacherEntity entity)
+        public int Insert(string name, string lastname, DateTime birthday)
         {
-            return !IsTeacherNameEmpty(entity.TeacherName, entity.TeacherLastName)
-                && IsLetter(entity.TeacherName, entity.TeacherLastName)
-                && IsBirthdayValid(entity.Birthday);
+            var teacher = new TeacherEntity
+            {
+                TeacherName = name,
+                TeacherLastName = lastname,
+                Birthday = birthday,
+            };
+
+            Add(teacher);
+
+            return teacher.Id;
+        }
+
+
+        private void ValidateTeacher(TeacherEntity entity)
+        {
+            if (IsTeacherNameEmpty(entity.TeacherName, entity.TeacherLastName)
+                || !IsLetter(entity.TeacherName, entity.TeacherLastName))
+                throw new Exception("Name and lastname are invalid");
+
+            if (!IsBirthdayValid(entity.Birthday))
+                throw new Exception($"Birthday is invalid. It should be between {TeacherEntity.MinLimitedYear} and {TeacherEntity.MaxLimitedYear}");
         }
 
         private bool IsLetter(string name, string lastname)
@@ -72,7 +93,8 @@ namespace BusinessLogic.Repositories
 
         private bool IsBirthdayValid(DateTime birthday)
         {
-            return birthday.Year < 1999 && birthday.Year > 1950;
+            return birthday.Year < TeacherEntity.MaxLimitedYear
+                   && birthday.Year > TeacherEntity.MinLimitedYear;
         }
 
         private void CheckIsTeacherDeletable(TeacherEntity entity)

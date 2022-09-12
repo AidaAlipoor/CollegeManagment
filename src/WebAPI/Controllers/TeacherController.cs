@@ -2,28 +2,31 @@
 using System;
 using System.Threading.Tasks;
 using System.Web.Http;
+using WebAPI.DTOs;
 
 namespace WebAPI.Controllers
 {
     public class TeacherController : ApiController
     {
-        
-        public TeacherController() {}
+        private readonly ITeacherRepository _repository;
+        public TeacherController() { _repository = new TeacherRepository(); }
 
         [HttpGet]
         public async Task<IHttpActionResult> Get()
         {
-            var repository = new TeacherRepository();
-
-            var teachers = await repository.GetAsync();
+            var teachers = await _repository.GetAsync();
 
             return Ok(teachers);
         }
 
         [HttpPost]
-        public async Task<IHttpActionResult> Post()
+        public async Task<IHttpActionResult> Post(TeacherDto teacherDto)
         {
-            throw new NotImplementedException();
+            var id = _repository.Insert(teacherDto.Name, teacherDto.Lastname, teacherDto.BirthDay);
+
+            await _repository.SaveAsync();
+
+            return Ok(id);
         }
 
         [HttpPut]
