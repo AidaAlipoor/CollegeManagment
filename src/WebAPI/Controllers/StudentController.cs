@@ -12,10 +12,7 @@ namespace WebAPI.Controllers
     public class StudentController : ApiController
     {
         private readonly IStudentRepository _repository;
-        public StudentController()
-        {
-            _repository = new StudentRepository();
-        }
+        public StudentController() => _repository = new StudentRepository();
 
         [System.Web.Http.HttpGet]
         public async Task<IHttpActionResult> Get()
@@ -36,6 +33,13 @@ namespace WebAPI.Controllers
             return Ok(id);
         }
 
+        public async Task<IHttpActionResult> Put(int id, StudentDto studentDto)
+        {
+            await _repository.UpdateAsync(id, studentDto.Name, studentDto.Lastname, studentDto.IdNumber);
 
+            await _repository.SaveAsync();
+
+            return Ok();
+        }
     }
 }

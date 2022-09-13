@@ -17,8 +17,7 @@ namespace BusinessLogic.Repositories
 
         public override void Add(StudentEntity entity)
         {
-            if (!IsStudentValid(entity))
-                throw new Exception();
+            ValidStudent(entity);
 
             base.Add(entity);
         }
@@ -28,6 +27,8 @@ namespace BusinessLogic.Repositories
         }
         public override void Update(StudentEntity entity)
         {
+            ValidStudent(entity);
+
             base.Update(entity);
         }
 
@@ -86,9 +87,15 @@ namespace BusinessLogic.Repositories
 
             Add(student);
         }
-        public Task UpdateAsync(int id, string name, string lastname, int idNumber)
+        public async Task UpdateAsync(int id, string name, string lastname, int idNumber)
         {
-            throw new NotImplementedException();
+            var student = await FetchAsync(id);
+
+            student.StudentName = name;
+            student.StudentLastName = lastname;
+            student.IdNumber = idNumber;
+
+            Update(student);
         }
         public Task Delete(int id)
         {
@@ -97,11 +104,14 @@ namespace BusinessLogic.Repositories
 
 
 
-        private bool IsStudentValid(StudentEntity entity)
+        private void ValidStudent(StudentEntity entity)
         {
-            return !IsStudentNameEmpty(entity.StudentName, entity.StudentLastName)
-                && IsLetter(entity.StudentName, entity.StudentLastName)
-                && IsIdNumberValid(entity.IdNumber);
+           if(IsStudentNameEmpty(entity.StudentName, entity.StudentLastName) || !IsLetter(entity.StudentName, entity.StudentLastName))
+                throw new Exception("Name and lastname are invalid");
+
+            if (!IsIdNumberValid(entity.IdNumber))
+                throw new Exception($"Id Number is invalid. it could not be more or less than {StudentEntity.IdNumberLengthLimit} numbers");
+
         }
         private bool IsStudentNameEmpty(string name, string lastName) => string.IsNullOrEmpty(name)
             && string.IsNullOrEmpty(lastName);
