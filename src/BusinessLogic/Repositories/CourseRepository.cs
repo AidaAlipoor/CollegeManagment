@@ -80,9 +80,13 @@ namespace BusinessLogic.Repositories
             Add(course);
         }
 
-        public Task UpdateAsync(int id, string name)
+        public async Task UpdateAsync(int id, string name)
         {
-            throw new NotImplementedException();
+           var course = await FetchAsync(id);
+
+            course.CourseName = name;
+
+            Update(course);
         }
 
         public Task Delete(int id)

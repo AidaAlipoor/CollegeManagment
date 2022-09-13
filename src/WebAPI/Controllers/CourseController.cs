@@ -35,7 +35,15 @@ namespace WebAPI.Controllers
 
             return Ok(id);
         }
+        [System.Web.Http.HttpPut]
+        public async Task<IHttpActionResult> Put(int id, CourseDto courseDto)
+        {
+            await _repository.UpdateAsync(id, courseDto.Name);
 
+            await _repository.SaveAsync();
+
+            return Ok();
+        }
 
     }
 }
