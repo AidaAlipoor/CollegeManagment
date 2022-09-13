@@ -97,9 +97,12 @@ namespace BusinessLogic.Repositories
 
             Update(student);
         }
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            CheckIsIdExist(id);
+
+            var student = await FetchAsync(id);
+            Delete(student);
         }
 
 
@@ -125,6 +128,13 @@ namespace BusinessLogic.Repositories
             return idNumber.ToString().Length == StudentEntity.IdNumberLengthLimit;
         }
 
+        private void CheckIsIdExist(int id)
+        {
+            var isIdExistInTeacher = dbContext.Students.Any(t => t.Id == id);
+            if (!isIdExistInTeacher)
+                throw new Exception("this id does not exist");
+
+        }
 
     }
 }
