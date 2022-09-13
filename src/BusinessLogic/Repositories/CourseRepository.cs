@@ -1,4 +1,5 @@
 ﻿
+using BusinessLogic.ViewModels;
 using DataAccess.EntitiesConfiguration;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,10 @@ using CourseEntity = DataAccess.Entities.Course;
 
 namespace BusinessLogic.Repositories
 {
-    public class CourseRepository : Repository<CourseEntity>
+    public class CourseRepository : Repository<CourseEntity> , ICourseRepository
     {
+        public IReadOnlyList<int> InsertedIds { get; private set; }
+
         public override void Add(CourseEntity entity)
         {
             if (!IsCourseValid(entity))
@@ -46,6 +49,35 @@ namespace BusinessLogic.Repositories
             return base.FetchAsync(predicate);
         }
 
+
+        public async Task<List<CourseViewModel>> GetAsync()
+        {
+            return await dbContext.Courses
+                .Select(c => new CourseViewModel 
+                {
+                    Id = c.Id,
+                    Name = c.CourseName 
+                })
+                .ToListAsync();
+
+        }
+
+        public void Insert(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateAsync(int id, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+
         private bool IsCourseValid(CourseEntity entity) => !IsCourseNameEmpty(entity.CourseName) && !IsLetter(entity.CourseName);
         private bool IsCourseNameEmpty(string name) => string.IsNullOrEmpty(name);
         private bool IsLetter(string name) => int.TryParse(name , out _);
@@ -58,5 +90,6 @@ namespace BusinessLogic.Repositories
             if (isCourseUsedAtTeacherCourses)
                 throw new Exception();
         }
+
     }
 }
