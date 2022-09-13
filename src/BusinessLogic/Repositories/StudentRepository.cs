@@ -66,6 +66,7 @@ namespace BusinessLogic.Repositories
             var student = await dbContext.Students
                 .Select(s => new StudentViewModel
                 {
+                    Id = s.Id,
                     Name = s.StudentName,
                     LastName = s.StudentLastName,
                     IdNumber = s.IdNumber

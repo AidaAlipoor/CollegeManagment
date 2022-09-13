@@ -8,6 +8,7 @@ namespace BusinessLogic.ViewModels
 {
     public sealed class StudentViewModel
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string LastName { get; set; }
         public int IdNumber { get; set; }

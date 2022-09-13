@@ -21,6 +21,7 @@ namespace WebAPI.Controllers
 
             return Ok(student);
         }
+
         [System.Web.Http.HttpPost]
         public async Task<IHttpActionResult> Post(StudentDto studentDto)
         {
@@ -33,6 +34,7 @@ namespace WebAPI.Controllers
             return Ok(id);
         }
 
+        [System.Web.Http.HttpPut]
         public async Task<IHttpActionResult> Put(int id, StudentDto studentDto)
         {
             await _repository.UpdateAsync(id, studentDto.Name, studentDto.Lastname, studentDto.IdNumber);
@@ -42,6 +44,7 @@ namespace WebAPI.Controllers
             return Ok();
         }
 
+        [System.Web.Http.HttpDelete]
         public async Task<IHttpActionResult> Delete(int id)
         {
             await _repository.Delete(id);
