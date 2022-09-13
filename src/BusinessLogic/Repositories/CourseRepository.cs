@@ -17,8 +17,7 @@ namespace BusinessLogic.Repositories
 
         public override void Add(CourseEntity entity)
         {
-            if (!IsCourseValid(entity))
-                throw new Exception();
+            ValidCourse(entity);
 
             base.Add(entity);
         }
@@ -29,6 +28,7 @@ namespace BusinessLogic.Repositories
         }
         public override void Update(CourseEntity entity)
         {
+            ValidCourse(entity);
             base.Update(entity);
         }
 
@@ -82,6 +82,8 @@ namespace BusinessLogic.Repositories
 
         public async Task UpdateAsync(int id, string name)
         {
+            CheckIsIdExist(id);
+
            var course = await FetchAsync(id);
 
             course.CourseName = name;
@@ -89,13 +91,21 @@ namespace BusinessLogic.Repositories
             Update(course);
         }
 
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            CheckIsIdExist(id);
+
+            var courseEntity = await FetchAsync(id);
+
+            Delete(courseEntity);
         }
 
 
-        private bool IsCourseValid(CourseEntity entity) => !IsCourseNameEmpty(entity.CourseName) && !IsLetter(entity.CourseName);
+        private void ValidCourse(CourseEntity entity)
+        {
+            if (IsCourseNameEmpty(entity.CourseName) || !IsLetter(entity.CourseName))
+                throw new Exception("Name is invalid");
+        } 
         private bool IsCourseNameEmpty(string name) => string.IsNullOrEmpty(name);
         private bool IsLetter(string name) => int.TryParse(name , out _);
         private void CheckIsCourseDeletable(CourseEntity entity)
@@ -105,7 +115,15 @@ namespace BusinessLogic.Repositories
                 .Any(tc => tc.Course.Id == entity.Id);
 
             if (isCourseUsedAtTeacherCourses)
-                throw new Exception();
+                throw new Exception("this item can not be deleted!");
+        }
+        private void CheckIsIdExist(int id)
+        {
+            var isIdExistInTeacher = dbContext.Courses.Any(t => t.Id == id);
+
+            if (!isIdExistInTeacher)
+                throw new Exception("this id does not exist");
+
         }
 
     }
