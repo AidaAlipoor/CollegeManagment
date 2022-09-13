@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
+using WebAPI.DTOs;
 
 namespace WebAPI.Controllers
 {
@@ -23,6 +24,18 @@ namespace WebAPI.Controllers
 
             return Ok(student);
         }
+        [System.Web.Http.HttpPost]
+        public async Task<IHttpActionResult> Post(CourseDto courseDto)
+        {
+            _repository.Insert(courseDto.Name);
+
+            await _repository.SaveAsync();
+
+            var id = _repository.InsertedIds.Single();
+
+            return Ok(id);
+        }
+
 
     }
 }

@@ -50,6 +50,18 @@ namespace BusinessLogic.Repositories
         }
 
 
+        public override async Task SaveAsync()
+        {
+            var addedEntities = dbContext.ChangeTracker
+                .Entries<CourseEntity>()
+                .Where(t => t.State == EntityState.Added)
+                .ToArray();
+
+            await base.SaveAsync();
+
+            InsertedIds = addedEntities.Select(t => t.Entity.Id).ToList();
+        }
+
         public async Task<List<CourseViewModel>> GetAsync()
         {
             return await dbContext.Courses
@@ -64,7 +76,8 @@ namespace BusinessLogic.Repositories
 
         public void Insert(string name)
         {
-            throw new NotImplementedException();
+            var course = new CourseEntity{ CourseName = name};
+            Add(course);
         }
 
         public Task UpdateAsync(int id, string name)

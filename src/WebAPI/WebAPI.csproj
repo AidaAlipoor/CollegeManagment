@@ -135,6 +135,7 @@
     <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Controllers\TeacherController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="DTOs\CourseDto.cs" />
     <Compile Include="DTOs\StudentDto.cs" />
     <Compile Include="DTOs\TeacherDto.cs" />
     <Compile Include="Global.asax.cs">
