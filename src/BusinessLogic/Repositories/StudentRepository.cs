@@ -1,6 +1,8 @@
-﻿using DataAccess.EntitiesConfiguration;
+﻿using BusinessLogic.ViewModels;
+using DataAccess.EntitiesConfiguration;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -9,8 +11,10 @@ using StudentEntity = DataAccess.Entities.Student;
 
 namespace BusinessLogic.Repositories
 {
-    public class StudentRepository : Repository<StudentEntity>
+    public class StudentRepository : Repository<StudentEntity>, IStudentRepository
     {
+        public IReadOnlyList<int> InsertedIds { get ; private set; }
+
         public override void Add(StudentEntity entity)
         {
             if (!IsStudentValid(entity))
@@ -44,6 +48,55 @@ namespace BusinessLogic.Repositories
             return base.FetchAsync(predicate);
         }
 
+
+        public override async Task SaveAsync()
+        {
+            var addedEntities = dbContext.ChangeTracker
+               .Entries<StudentEntity>()
+               .Where(t => t.State == EntityState.Added)
+               .ToArray();
+
+            await base.SaveAsync();
+
+            InsertedIds = addedEntities.Select(t => t.Entity.Id).ToList();
+        }
+        public async Task<List<StudentViewModel>> GetAsync()
+        {
+            var student = await dbContext.Students
+                .Select(s => new StudentViewModel
+                {
+                    Name = s.StudentName,
+                    LastName = s.StudentLastName,
+                    IdNumber = s.IdNumber
+                })
+                .ToListAsync();
+
+            return student;
+        }
+        public void Insert(string name, string lastname, int idNumber)
+        {
+            var student = new StudentEntity
+            {
+                StudentName = name
+                ,
+                StudentLastName = lastname
+                ,
+                IdNumber = idNumber
+            };
+
+            Add(student);
+        }
+        public Task UpdateAsync(int id, string name, string lastname, int idNumber)
+        {
+            throw new NotImplementedException();
+        }
+        public Task Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+
+
         private bool IsStudentValid(StudentEntity entity)
         {
             return !IsStudentNameEmpty(entity.StudentName, entity.StudentLastName)
@@ -61,5 +114,7 @@ namespace BusinessLogic.Repositories
         {
             return idNumber.ToString().Length == StudentEntity.IdNumberLengthLimit;
         }
+
+
     }
 }
