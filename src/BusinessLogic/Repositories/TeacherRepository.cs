@@ -86,7 +86,7 @@ namespace BusinessLogic.Repositories
         }
         public async Task Delete(int id)
         {
-            CheckIsIdExist(id);
+            CheckDoesIdExist(id);
 
             var teacherEntity = await FetchAsync(id);
             
@@ -130,10 +130,10 @@ namespace BusinessLogic.Repositories
                 throw new Exception("This item can not be deleted! ");
         }
 
-        private void CheckIsIdExist(int id)
+        private void CheckDoesIdExist(int id)
         {
-            var isIdExistInTeacher = dbContext.Teachers.Any(t => t.Id == id);
-            if (!isIdExistInTeacher)
+            var doesIdExistInTeacher = dbContext.Teachers.Any(t => t.Id == id);
+            if (!doesIdExistInTeacher)
                 throw new Exception("this id does not exist");
             
         }
