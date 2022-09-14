@@ -97,9 +97,11 @@ namespace BusinessLogic.Repositories
             Update(teacherCourse);
            
         }
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            var teacherCourse = await FetchAsync(id);
+
+            Delete(teacherCourse);
         }
     }
 }
