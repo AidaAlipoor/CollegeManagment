@@ -134,6 +134,7 @@
     <Compile Include="Controllers\CourseController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Controllers\TeacherController.cs" />
+    <Compile Include="Controllers\TeacherCourseController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DTOs\CourseDto.cs" />
     <Compile Include="DTOs\StudentDto.cs" />
@@ -155,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Course\" />
+    <Folder Include="Views\TeacherCourse\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

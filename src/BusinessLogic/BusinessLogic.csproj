@@ -57,6 +57,7 @@
     <Compile Include="Repositories\ICourseRepository.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\IStudentRepository.cs" />
+    <Compile Include="Repositories\ITeacherCourseRepository.cs" />
     <Compile Include="Repositories\ITeacherRepository.cs" />
     <Compile Include="Repositories\Repository.cs" />
     <Compile Include="Repositories\StudentRepository.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Repositories\TeacherRepository.cs" />
     <Compile Include="ViewModels\CourseViewModel.cs" />
     <Compile Include="ViewModels\StudentViewModel.cs" />
+    <Compile Include="ViewModels\TeacherCourseViewModel.cs" />
     <Compile Include="ViewModels\TeacherViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
