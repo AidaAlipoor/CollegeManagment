@@ -1,11 +1,8 @@
 ﻿using BusinessLogic.Repositories;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
-using System.Web.Mvc;
+using WebAPI.DTOs;
 
 namespace WebAPI.Controllers
 {
@@ -18,12 +15,33 @@ namespace WebAPI.Controllers
             _teacherCourseRepository = new TeacherCourseRepository();
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<IHttpActionResult> Get()
         {
             var teachers = await _teacherCourseRepository.GetAsync();
 
             return Ok(teachers);
+        }
+        [HttpPost]
+        public async Task<IHttpActionResult> Post(TeacherCourseDto teacherCourseDto )
+        {
+            await _teacherCourseRepository.Insert(teacherCourseDto.TeacherId , teacherCourseDto.CourseId);
+
+            await _teacherCourseRepository.SaveAsync();
+
+            var id = _teacherCourseRepository.InsertedIds.Single();
+
+            return Ok(id);
+        }
+
+        [HttpPut]
+        public async Task<IHttpActionResult> Put(int id, TeacherCourseDto teacherCourseDto)
+        {
+            await _teacherCourseRepository.UpdateAsync(id, teacherCourseDto.TeacherId , teacherCourseDto.CourseId);
+
+            await _teacherCourseRepository.SaveAsync();
+
+            return Ok();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DataAccess.Entities
 {
@@ -13,5 +14,6 @@ namespace DataAccess.Entities
         public string TeacherLastName { get; set; }
         public DateTime Birthday { get; set; }
         public virtual List<TeacherCourse> TeachersCourses { get; set; }
+
     }
 }

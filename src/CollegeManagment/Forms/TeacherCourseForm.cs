@@ -21,7 +21,7 @@ namespace CollegeManagment.UI.Forms
         {
             InitializeComponent();
 
-            var dbContext = CollegeManagmentContext.GetInstance();
+             CollegeManagmentContext.GetInstance();
 
             _teacherCourseRepository = new TeacherCourseRepository();
             _teacherRepository = new TeacherRepository();

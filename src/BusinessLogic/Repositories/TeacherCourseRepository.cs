@@ -12,7 +12,7 @@ namespace BusinessLogic.Repositories
 {
     public class TeacherCourseRepository : Repository<TeacherCourse> , ITeacherCourseRepository
     {
-        public IReadOnlyList<int> InsertedIds => throw new NotImplementedException();
+        public IReadOnlyList<int> InsertedIds { get; private set; }
 
         public TeacherCourseRepository() : base() { }
 
@@ -47,6 +47,18 @@ namespace BusinessLogic.Repositories
         }
 
 
+
+        public override async Task SaveAsync()
+        {
+            var addedEntities = dbContext.ChangeTracker
+                .Entries<TeacherCourse>()
+                .Where(t => t.State == EntityState.Added)
+                .ToArray();
+
+            await base.SaveAsync();
+
+            InsertedIds = addedEntities.Select(t => t.Entity.Id).ToList();
+        }
         public async Task<List<TeacherCourseViewModel>> GetAsync()
         {
             return await dbContext.TeacherCourses
@@ -59,22 +71,35 @@ namespace BusinessLogic.Repositories
                 })
                 .ToListAsync();
         }
-
-        public void Insert(string name, string lastname, DateTime birthday)
+        public async Task Insert(int teacherId, int courseId)
         {
-            throw new NotImplementedException();
-        }
+            var givenTeacherId = await dbContext.Teachers.FindAsync(teacherId);
+            var givenCourseId = await dbContext.Courses.FindAsync(courseId);
 
-        public Task UpdateAsync(int id, string name, string lastname, DateTime birthday)
+            var teacherCourse = new TeacherCourse 
+            {
+                Teacher = givenTeacherId,
+                Course = givenCourseId 
+            };
+
+            Add(teacherCourse);
+        }
+        public async Task UpdateAsync(int id, int teacherId, int courseId)
         {
-            throw new NotImplementedException();
-        }
+            var teacherCourse = await FetchAsync(id);
 
+            var givenTeacherId = await dbContext.Teachers.FindAsync(teacherId);
+            var givenCourseId = await dbContext.Courses.FindAsync(courseId);
+
+            teacherCourse.Teacher = givenTeacherId;
+            teacherCourse.Course = givenCourseId;
+
+            Update(teacherCourse);
+           
+        }
         public Task Delete(int id)
         {
             throw new NotImplementedException();
         }
-
-        
     }
 }
