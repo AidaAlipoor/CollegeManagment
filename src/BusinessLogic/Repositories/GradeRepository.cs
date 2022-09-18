@@ -94,7 +94,15 @@ namespace BusinessLogic.Repositories
         }
         public async Task UpdateAsync(int id, int score, int teacherCourseId, int studentId)
         {
-           
+            var gradeId = await FetchAsync(id);
+            var givenTeacherCourseId = await dbContext.TeacherCourses.FindAsync(teacherCourseId);
+            var givenStudentId = await dbContext.Students.FindAsync(studentId);
+
+            gradeId.Score = score;
+            gradeId.TeacherCourse = givenTeacherCourseId;
+            gradeId.Students = givenStudentId;
+
+            Update(gradeId);
         }
         public Task Delete(int id)
         {

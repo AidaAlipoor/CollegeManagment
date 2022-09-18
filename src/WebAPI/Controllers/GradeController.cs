@@ -36,6 +36,15 @@ namespace WebAPI.Controllers
 
             return Ok(id);
         }
+        [HttpPut]
+        public async Task<IHttpActionResult> Put(int id, GradeDto gradeDto)
+        {
+            await _repository.UpdateAsync(id ,gradeDto.Score , gradeDto.TeacherCourseId , gradeDto.StudentId);
+
+            await _repository.SaveAsync();
+
+            return Ok();
+        }
 
     }
 }
