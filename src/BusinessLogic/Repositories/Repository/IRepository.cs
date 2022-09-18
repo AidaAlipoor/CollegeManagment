@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace BusinessLogic.Repositories
+namespace BusinessLogic.Repositories.Repositorey
 {
     public interface IRepository<TEntity> where TEntity : class 
     {

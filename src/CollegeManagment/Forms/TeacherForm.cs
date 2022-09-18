@@ -1,4 +1,6 @@
 ﻿using BusinessLogic.Repositories;
+using BusinessLogic.Repositories.Repositorey;
+using BusinessLogic.Repositories.Teacher;
 using DataAccess.Entities;
 using DataAccess.EntitiesConfiguration;
 using System;

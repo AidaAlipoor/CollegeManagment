@@ -1,14 +1,16 @@
-﻿using BusinessLogic.ViewModels;
+﻿using BusinessLogic.Repositories.Repositorey;
+using BusinessLogic.ViewModels;
 using DataAccess.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using StudentEntity = DataAccess.Entities.Student;
 
-namespace BusinessLogic.Repositories
+namespace BusinessLogic.Repositories.Student
 {
-    public interface IStudentRepository : IRepository<Student>
+    public interface IStudentRepository : IRepository<StudentEntity>
     {
         IReadOnlyList<int> InsertedIds { get;}
 

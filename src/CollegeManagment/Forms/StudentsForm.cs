@@ -1,5 +1,6 @@
-﻿using BusinessLogic.Repositories;
-using DataAccess.EntitiesConfiguration;
+﻿
+using BusinessLogic.Repositories.Repositorey;
+using BusinessLogic.Repositories.Student;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;

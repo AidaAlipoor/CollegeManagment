@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Repositories;
+using BusinessLogic.Repositories.Student;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

@@ -11,6 +11,10 @@ using TeacherCourseEntity = DataAccess.Entities.TeacherCourse;
 using GradeEntity = DataAccess.Entities.Grade;
 using StudentEntity = DataAccess.Entities.Student;
 using DataAccess.EntitiesConfiguration;
+using BusinessLogic.Repositories.Repositorey;
+using BusinessLogic.Repositories.TeacherCourse;
+using BusinessLogic.Repositories.Grade;
+using BusinessLogic.Repositories.Student;
 
 namespace CollegeManagment.UI.Forms
 {

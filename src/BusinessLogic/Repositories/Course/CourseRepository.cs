@@ -1,6 +1,6 @@
 ﻿
+using BusinessLogic.Repositories.Repositorey;
 using BusinessLogic.ViewModels;
-using DataAccess.EntitiesConfiguration;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using CourseEntity = DataAccess.Entities.Course;
 
-namespace BusinessLogic.Repositories
+namespace BusinessLogic.Repositories.Course
 {
     public class CourseRepository : Repository<CourseEntity> , ICourseRepository
     {

@@ -9,6 +9,10 @@ using TeacherCourseEntity = DataAccess.Entities.TeacherCourse;
 using CourseEntity = DataAccess.Entities.Course;
 using BusinessLogic.Repositories;
 using DataAccess.EntitiesConfiguration;
+using BusinessLogic.Repositories.Course;
+using BusinessLogic.Repositories.Repositorey;
+using BusinessLogic.Repositories.TeacherCourse;
+using BusinessLogic.Repositories.Teacher;
 
 namespace CollegeManagment.UI.Forms
 {

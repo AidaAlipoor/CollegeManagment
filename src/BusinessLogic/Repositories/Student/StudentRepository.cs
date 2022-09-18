@@ -1,4 +1,5 @@
-﻿using BusinessLogic.ViewModels;
+﻿using BusinessLogic.Repositories.Repositorey;
+using BusinessLogic.ViewModels;
 using DataAccess.EntitiesConfiguration;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using StudentEntity = DataAccess.Entities.Student;
 
-namespace BusinessLogic.Repositories
+namespace BusinessLogic.Repositories.Student
 {
     public class StudentRepository : Repository<StudentEntity>, IStudentRepository
     {

@@ -52,18 +52,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\CourseRepository.cs" />
-    <Compile Include="Repositories\GradeRepository.cs" />
-    <Compile Include="Repositories\ICourseRepository.cs" />
-    <Compile Include="Repositories\IGradeRepository.cs" />
-    <Compile Include="Repositories\IRepository.cs" />
-    <Compile Include="Repositories\IStudentRepository.cs" />
-    <Compile Include="Repositories\ITeacherCourseRepository.cs" />
-    <Compile Include="Repositories\ITeacherRepository.cs" />
-    <Compile Include="Repositories\Repository.cs" />
-    <Compile Include="Repositories\StudentRepository.cs" />
-    <Compile Include="Repositories\TeacherCourseRepository.cs" />
-    <Compile Include="Repositories\TeacherRepository.cs" />
+    <Compile Include="Repositories\Course\CourseRepository.cs" />
+    <Compile Include="Repositories\Grade\GradeRepository.cs" />
+    <Compile Include="Repositories\Course\ICourseRepository.cs" />
+    <Compile Include="Repositories\Grade\IGradeRepository.cs" />
+    <Compile Include="Repositories\Repository\IRepository.cs" />
+    <Compile Include="Repositories\Student\IStudentRepository.cs" />
+    <Compile Include="Repositories\TeacherCourse\ITeacherCourseRepository.cs" />
+    <Compile Include="Repositories\Teacher\ITeacherRepository.cs" />
+    <Compile Include="Repositories\Repository\Repository.cs" />
+    <Compile Include="Repositories\Student\StudentRepository.cs" />
+    <Compile Include="Repositories\TeacherCourse\TeacherCourseRepository.cs" />
+    <Compile Include="Repositories\Teacher\TeacherRepository.cs" />
     <Compile Include="ViewModels\CourseViewModel.cs" />
     <Compile Include="ViewModels\GradeViewModel.cs" />
     <Compile Include="ViewModels\StudentViewModel.cs" />

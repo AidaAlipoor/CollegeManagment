@@ -1,4 +1,5 @@
-﻿using BusinessLogic.ViewModels;
+﻿using BusinessLogic.Repositories.Repositorey;
+using BusinessLogic.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -7,7 +8,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TeacherEntity = DataAccess.Entities.Teacher;
 
-namespace BusinessLogic.Repositories
+namespace BusinessLogic.Repositories.Teacher
 {
     public class TeacherRepository : Repository<TeacherEntity>, ITeacherRepository
     {

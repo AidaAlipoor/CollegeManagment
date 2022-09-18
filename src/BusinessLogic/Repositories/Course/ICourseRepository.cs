@@ -1,12 +1,11 @@
-﻿using BusinessLogic.ViewModels;
-using DataAccess.Entities;
-using System;
+﻿using BusinessLogic.Repositories.Repositorey;
+using BusinessLogic.ViewModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace BusinessLogic.Repositories
+namespace BusinessLogic.Repositories.Course
 {
-    public interface ICourseRepository : IRepository<Course>
+    public interface ICourseRepository : IRepository<DataAccess.Entities.Course>
     {
         IReadOnlyList<int> InsertedIds { get; }
 

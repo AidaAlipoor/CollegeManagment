@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using DataAccess.EntitiesConfiguration;
 
-namespace BusinessLogic.Repositories
+namespace BusinessLogic.Repositories.Repositorey
 {
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
