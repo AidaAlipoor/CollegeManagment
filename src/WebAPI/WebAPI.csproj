@@ -138,6 +138,7 @@
     <Compile Include="Controllers\TeacherCourseController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DTOs\CourseDto.cs" />
+    <Compile Include="DTOs\GradeDto.cs" />
     <Compile Include="DTOs\StudentDto.cs" />
     <Compile Include="DTOs\TeacherCourseDto.cs" />
     <Compile Include="DTOs\TeacherDto.cs" />

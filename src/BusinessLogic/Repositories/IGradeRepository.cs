@@ -13,8 +13,8 @@ namespace BusinessLogic.Repositories
         IReadOnlyList<int> InsertedIds { get; }
 
         Task<List<GradeViewModel>> GetAsync();
-        void Insert(string name);
-        Task UpdateAsync(int id, string name);
+        Task Insert(int score , int teacherCourseId , int studentId);
+        Task UpdateAsync(int id, int score, int teacherCourseId, int studentId);
         Task Delete(int id);
     }
 }

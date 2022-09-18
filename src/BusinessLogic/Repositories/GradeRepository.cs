@@ -11,7 +11,7 @@ using GradeEntity = DataAccess.Entities.Grade;
 
 namespace BusinessLogic.Repositories
 {
-    public class GradeRepository : Repository<GradeEntity> , IGradeRepository
+    public class GradeRepository : Repository<GradeEntity>, IGradeRepository
     {
         public IReadOnlyList<int> InsertedIds { get; private set; }
 
@@ -48,37 +48,58 @@ namespace BusinessLogic.Repositories
             return base.FetchAsync(predicate);
         }
 
-        private bool IsGradeValid(GradeEntity entity) =>  IsGradeValueValid(entity.Score);
+        private bool IsGradeValid(GradeEntity entity) => IsGradeValueValid(entity.Score);
         private bool IsGradeValueValid(int score)
         {
             return score >= 0 && score <= GradeEntity.ScoreNumberLimit;
         }
 
+        public override async Task SaveAsync()
+        {
+            var addedEntities = dbContext.ChangeTracker
+                .Entries<GradeEntity>()
+                .Where(g => g.State == EntityState.Added)
+                .ToArray();
+
+            await base.SaveAsync();
+
+            InsertedIds = addedEntities.Select(g => g.Entity.Id).ToList();
+        }
         public async Task<List<GradeViewModel>> GetAsync()
         {
             return await dbContext.Grades
-                .Select(g => new GradeViewModel 
-                { 
-                    Id = g.Id, Score = g.Score,
-                    TeacherCourseId = g.TeacherCourse.Id, 
-                    StudentId = g.Students.Id 
-                
+                .Select(g => new GradeViewModel
+                {
+                    Id = g.Id,
+                    Score = g.Score,
+                    TeacherCourseId = g.TeacherCourse.Id,
+                    StudentId = g.Students.Id
+
                 }).ToListAsync();
         }
-
-        public void Insert(string name)
+        public async Task Insert(int score, int teacherCourseId, int studentId)
         {
-            throw new NotImplementedException();
-        }
+            var givenTeacherCourseId = await dbContext.TeacherCourses.FindAsync(teacherCourseId);
+            var givenStudentId = await dbContext.Students.FindAsync(studentId);
 
-        public Task UpdateAsync(int id, string name)
+            var grade = new GradeEntity
+            {
+                Score = score,
+                TeacherCourse = givenTeacherCourseId,
+                Students = givenStudentId
+            };
+
+            Add(grade);
+
+        }
+        public async Task UpdateAsync(int id, int score, int teacherCourseId, int studentId)
         {
-            throw new NotImplementedException();
+           
         }
-
         public Task Delete(int id)
         {
             throw new NotImplementedException();
         }
+
     }
 }
