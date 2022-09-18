@@ -1,9 +1,6 @@
 ﻿using BusinessLogic.Repositories;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 using WebAPI.DTOs;
 
@@ -45,6 +42,16 @@ namespace WebAPI.Controllers
 
             return Ok();
         }
+        [HttpDelete]
+        public async Task<IHttpActionResult> Delete(int id)
+        {
+            await _repository.Delete(id);
+
+            await _repository.SaveAsync();
+
+            return Ok();
+        }
+
 
     }
 }

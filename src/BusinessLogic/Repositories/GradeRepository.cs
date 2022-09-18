@@ -17,8 +17,8 @@ namespace BusinessLogic.Repositories
 
         public override void Add(GradeEntity entity)
         {
-            if (!IsGradeValid(entity))
-                throw new Exception();
+            ValidGradeValue(entity.Score);
+            CheckDoTeacherCourceIdAndStuentIdExist(entity.TeacherCourse.Id, entity.Students.Id);
 
             base.Add(entity);
         }
@@ -48,11 +48,6 @@ namespace BusinessLogic.Repositories
             return base.FetchAsync(predicate);
         }
 
-        private bool IsGradeValid(GradeEntity entity) => IsGradeValueValid(entity.Score);
-        private bool IsGradeValueValid(int score)
-        {
-            return score >= 0 && score <= GradeEntity.ScoreNumberLimit;
-        }
 
         public override async Task SaveAsync()
         {
@@ -94,6 +89,9 @@ namespace BusinessLogic.Repositories
         }
         public async Task UpdateAsync(int id, int score, int teacherCourseId, int studentId)
         {
+            CheckDoesIdExistInGrade(id);
+            CheckDoTeacherCourceIdAndStuentIdExist(teacherCourseId, studentId);
+
             var gradeId = await FetchAsync(id);
             var givenTeacherCourseId = await dbContext.TeacherCourses.FindAsync(teacherCourseId);
             var givenStudentId = await dbContext.Students.FindAsync(studentId);
@@ -104,9 +102,37 @@ namespace BusinessLogic.Repositories
 
             Update(gradeId);
         }
-        public Task Delete(int id)
+        public async Task Delete(int id)
         {
-            throw new NotImplementedException();
+            CheckDoesIdExistInGrade(id);
+
+            var gradeId = await dbContext.Grades.FindAsync(id);
+
+            Delete(gradeId);
+        }
+
+
+        private void ValidGradeValue(int score)
+        {
+            var scoreValueLimte = score >= 0 && score <= GradeEntity.ScoreNumberLimit;
+
+            if (!scoreValueLimte)
+                throw new Exception("score is not valid!");
+        }
+        private void CheckDoesIdExistInGrade(int id)
+        {
+            var gradeId = dbContext.Grades.Any(g => g.Id == id);
+
+            if (!gradeId)
+                throw new Exception("This id does not exist");
+        }
+        private void CheckDoTeacherCourceIdAndStuentIdExist(int teacherCourseId, int studentId)
+        {
+            var doesIdExistInTeacherCourse = dbContext.TeacherCourses.Any(tc => tc.Id == teacherCourseId);
+            var doesIdExistInStudent = dbContext.Students.Any(s => s.Id == studentId);
+
+            if (!doesIdExistInTeacherCourse && !doesIdExistInStudent)
+                throw new Exception("teacherCourse id or Student id doesn't exist");
         }
 
     }
