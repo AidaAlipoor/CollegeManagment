@@ -132,6 +132,7 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\CourseController.cs" />
+    <Compile Include="Controllers\GradeController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Controllers\TeacherController.cs" />
     <Compile Include="Controllers\TeacherCourseController.cs" />
@@ -157,6 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Course\" />
+    <Folder Include="Views\Grade\" />
     <Folder Include="Views\TeacherCourse\" />
   </ItemGroup>
   <ItemGroup>
