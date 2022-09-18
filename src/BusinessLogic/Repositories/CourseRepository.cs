@@ -119,9 +119,9 @@ namespace BusinessLogic.Repositories
         }
         private void CheckDoesIdExist(int id)
         {
-            var doesIdExistInTeacher = dbContext.Courses.Any(t => t.Id == id);
+            var doesIdExistInCourse = dbContext.Courses.Any(t => t.Id == id);
 
-            if (!doesIdExistInTeacher)
+            if (!doesIdExistInCourse)
                 throw new Exception("this id does not exist");
 
         }
