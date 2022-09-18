@@ -30,10 +30,7 @@ namespace BusinessLogic.Repositories.TeacherCourse
         }
 
         public override async Task DeleteAsync(int id) => await base.DeleteAsync(id);
-        public override async Task<List<TeacherCourseEntity>> FetchAsync()
-        {
-            return await base.FetchAsync();
-        }
+        public override async Task<List<TeacherCourseEntity>> FetchAsync() => await base.FetchAsync();
         public override async Task<TeacherCourseEntity> FetchAsync(int id) => await base.FetchAsync(id);
         public override async Task<List<TeacherCourseEntity>> FetchAsync(Expression<Func<TeacherCourseEntity, bool>> predicate)
             => await base.FetchAsync(predicate);
@@ -80,8 +77,8 @@ namespace BusinessLogic.Repositories.TeacherCourse
         }
         public async Task UpdateAsync(int id, int teacherId, int courseId)
         {
-            CheckDoesIdExistInTeacherCourse(id);
-            CheckDoTeacherIdAndCourceIdExist(teacherId, courseId);
+            await CheckDoesIdExistInTeacherCourse(id);
+            await CheckDoTeacherIdAndCourceIdExist(teacherId, courseId);
 
             var teacherCourse = await FetchAsync(id);
 
@@ -96,7 +93,7 @@ namespace BusinessLogic.Repositories.TeacherCourse
         }
         public async Task Delete(int id)
         {
-            CheckDoesIdExistInTeacherCourse(id);
+            await CheckDoesIdExistInTeacherCourse(id);
 
             var teacherCourse = await FetchAsync(id);
 

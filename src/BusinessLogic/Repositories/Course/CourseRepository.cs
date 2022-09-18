@@ -32,22 +32,10 @@ namespace BusinessLogic.Repositories.Course
             base.Update(entity);
         }
 
-        public override Task DeleteAsync(int id)
-        {
-            return base.DeleteAsync(id);
-        }
-        public override Task<List<CourseEntity>> FetchAsync()
-        {
-            return base.FetchAsync();
-        }
-        public override Task<CourseEntity> FetchAsync(int id)
-        {
-            return base.FetchAsync(id);
-        }
-        public override Task<List<CourseEntity>> FetchAsync(Expression<Func<CourseEntity, bool>> predicate)
-        {
-            return base.FetchAsync(predicate);
-        }
+        public override async Task DeleteAsync(int id) => await base.DeleteAsync(id);
+        public override async Task<List<CourseEntity>> FetchAsync() => await base.FetchAsync();
+        public override async Task<CourseEntity> FetchAsync(int id) => await base.FetchAsync(id);
+        public override async Task<List<CourseEntity>> FetchAsync(Expression<Func<CourseEntity, bool>> predicate) => await base.FetchAsync(predicate);
 
 
         public override async Task SaveAsync()
@@ -61,7 +49,6 @@ namespace BusinessLogic.Repositories.Course
 
             InsertedIds = addedEntities.Select(t => t.Entity.Id).ToList();
         }
-
         public async Task<List<CourseViewModel>> GetAsync()
         {
             return await dbContext.Courses
@@ -73,13 +60,11 @@ namespace BusinessLogic.Repositories.Course
                 .ToListAsync();
 
         }
-
         public void Insert(string name)
         {
             var course = new CourseEntity{ CourseName = name};
             Add(course);
         }
-
         public async Task UpdateAsync(int id, string name)
         {
             CheckDoesIdExist(id);
@@ -90,7 +75,6 @@ namespace BusinessLogic.Repositories.Course
 
             Update(course);
         }
-
         public async Task Delete(int id)
         {
             CheckDoesIdExist(id);

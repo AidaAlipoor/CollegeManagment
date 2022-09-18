@@ -34,11 +34,11 @@ namespace BusinessLogic.Repositories.Teacher
         }
 
         public override Task DeleteAsync(int id) => base.DeleteAsync(id);
-
         public override Task<List<TeacherEntity>> FetchAsync() => base.FetchAsync();
         public override Task<TeacherEntity> FetchAsync(int id) => base.FetchAsync(id);
         public override Task<List<TeacherEntity>> FetchAsync(Expression<Func<TeacherEntity, bool>> predicate)
             => base.FetchAsync(predicate);
+
 
         public override async Task SaveAsync()
         {
@@ -51,7 +51,6 @@ namespace BusinessLogic.Repositories.Teacher
 
             InsertedIds = addedEntities.Select(t => t.Entity.Id).ToList();
         }
-
         public async Task<List<TeacherViewModel>> GetAsync()
         {
             return await dbContext.Teachers
@@ -105,22 +104,18 @@ namespace BusinessLogic.Repositories.Teacher
             if (!IsBirthdayValid(entity.Birthday))
                 throw new Exception($"Birthday is invalid. It should be between {TeacherEntity.MinLimitedYear} and {TeacherEntity.MaxLimitedYear}");
         }
-
         private bool IsLetter(string name, string lastname)
         {
             return name.Count(c => char.IsLetter(c)) == name.Length
                 && lastname.Count(c => char.IsLetter(c)) == lastname.Length;
         }
-
         private bool IsTeacherNameEmpty(string name, string lastName) => string.IsNullOrEmpty(name)
             && string.IsNullOrEmpty(lastName);
-
         private bool IsBirthdayValid(DateTime birthday)
         {
             return birthday.Year < TeacherEntity.MaxLimitedYear
                    && birthday.Year > TeacherEntity.MinLimitedYear;
         }
-
         private void CheckIsTeacherDeletable(TeacherEntity entity)
         {
             var isTeacherUsedAtTeacherCourses = dbContext.TeacherCourses
@@ -130,7 +125,6 @@ namespace BusinessLogic.Repositories.Teacher
             if (isTeacherUsedAtTeacherCourses)
                 throw new Exception("This item can not be deleted! ");
         }
-
         private void CheckDoesIdExist(int id)
         {
             var doesIdExistInTeacher = dbContext.Teachers.Any(t => t.Id == id);

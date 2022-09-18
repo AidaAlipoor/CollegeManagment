@@ -32,22 +32,10 @@ namespace BusinessLogic.Repositories.Grade
             base.Update(entity);
         }
 
-        public override Task DeleteAsync(int id)
-        {
-            return base.DeleteAsync(id);
-        }
-        public override Task<List<GradeEntity>> FetchAsync()
-        {
-            return base.FetchAsync();
-        }
-        public override Task<GradeEntity> FetchAsync(int id)
-        {
-            return base.FetchAsync(id);
-        }
-        public override Task<List<GradeEntity>> FetchAsync(Expression<Func<GradeEntity, bool>> predicate)
-        {
-            return base.FetchAsync(predicate);
-        }
+        public override async Task DeleteAsync(int id) => await base.DeleteAsync(id);
+        public override async Task<List<GradeEntity>> FetchAsync() => await base.FetchAsync();
+        public override async Task<GradeEntity> FetchAsync(int id) => await base.FetchAsync(id);
+        public override async Task<List<GradeEntity>> FetchAsync(Expression<Func<GradeEntity, bool>> predicate) => await base.FetchAsync(predicate);
 
 
         public override async Task SaveAsync()

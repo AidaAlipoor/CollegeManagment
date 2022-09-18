@@ -33,22 +33,10 @@ namespace BusinessLogic.Repositories.Student
             base.Update(entity);
         }
 
-        public override Task DeleteAsync(int id)
-        {
-            return base.DeleteAsync(id);
-        }
-        public override Task<List<StudentEntity>> FetchAsync()
-        {
-            return base.FetchAsync();
-        }
-        public override Task<StudentEntity> FetchAsync(int id)
-        {
-            return base.FetchAsync(id);
-        }
-        public override Task<List<StudentEntity>> FetchAsync(Expression<Func<StudentEntity, bool>> predicate)
-        {
-            return base.FetchAsync(predicate);
-        }
+        public override async Task DeleteAsync(int id) => await base.DeleteAsync(id);
+        public override async Task<List<StudentEntity>> FetchAsync() => await base.FetchAsync();
+        public override async Task<StudentEntity> FetchAsync(int id) => await base.FetchAsync(id);
+        public override async Task<List<StudentEntity>> FetchAsync(Expression<Func<StudentEntity, bool>> predicate) => await  base.FetchAsync(predicate);
 
 
         public override async Task SaveAsync()
