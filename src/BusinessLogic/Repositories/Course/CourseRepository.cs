@@ -1,6 +1,7 @@
 ﻿
 using BusinessLogic.Repositories.Repositorey;
 using BusinessLogic.ViewModels;
+using DataAccess.EntitiesConfiguration;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -13,6 +14,8 @@ namespace BusinessLogic.Repositories.Course
 {
     public class CourseRepository : Repository<CourseEntity> , ICourseRepository
     {
+        public CourseRepository(ICollegeManagmentContext dbcontext) : base(dbcontext) { }
+
         public IReadOnlyList<int> InsertedIds { get; private set; }
 
         public override void Add(CourseEntity entity)
@@ -51,7 +54,7 @@ namespace BusinessLogic.Repositories.Course
         }
         public async Task<List<CourseViewModel>> GetAsync()
         {
-            return await _dbContext.Courses
+            return await _dbContext.Set<CourseEntity>()
                 .Select(c => new CourseViewModel 
                 {
                     Id = c.Id,
@@ -94,7 +97,7 @@ namespace BusinessLogic.Repositories.Course
         private bool IsLetter(string name) => int.TryParse(name , out _);
         private void CheckIsCourseDeletable(CourseEntity entity)
         {
-            var isCourseUsedAtTeacherCourses = _dbContext.TeacherCourses
+            bool isCourseUsedAtTeacherCourses = _dbContext.Set<DataAccess.Entities.TeacherCourse>()
                 .Include(tc => tc.Course)
                 .Any(tc => tc.Course.Id == entity.Id);
 
@@ -103,7 +106,7 @@ namespace BusinessLogic.Repositories.Course
         }
         private void CheckDoesIdExist(int id)
         {
-            var doesIdExistInCourse = _dbContext.Courses.Any(t => t.Id == id);
+            var doesIdExistInCourse = _dbContext.Set<CourseEntity>().Any(t => t.Id == id);
 
             if (!doesIdExistInCourse)
                 throw new Exception("this id does not exist");
