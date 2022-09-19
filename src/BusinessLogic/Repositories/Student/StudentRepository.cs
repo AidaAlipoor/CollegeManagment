@@ -14,6 +14,8 @@ namespace BusinessLogic.Repositories.Student
 {
     public class StudentRepository : Repository<StudentEntity>, IStudentRepository
     {
+        public StudentRepository(ICollegeManagmentContext dbcontext) : base(dbcontext) { }
+
         public IReadOnlyList<int> InsertedIds { get ; private set; }
 
         public override void Add(StudentEntity entity)
@@ -52,7 +54,7 @@ namespace BusinessLogic.Repositories.Student
         }
         public async Task<List<StudentViewModel>> GetAsync()
         {
-            var student = await _dbContext.Students
+            var student = await _dbContext.Set<StudentEntity>()
                 .Select(s => new StudentViewModel
                 {
                     Id = s.Id,
@@ -120,7 +122,7 @@ namespace BusinessLogic.Repositories.Student
 
         private void CheckDoesIdExist(int id)
         {
-            var doesIdExistInTeacher = _dbContext.Students.Any(t => t.Id == id);
+            var doesIdExistInTeacher = _dbContext.Set<StudentEntity>().Any(t => t.Id == id);
             if (!doesIdExistInTeacher)
                 throw new Exception("this id does not exist");
 
