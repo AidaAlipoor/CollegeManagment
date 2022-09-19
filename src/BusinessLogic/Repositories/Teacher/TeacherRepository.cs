@@ -13,7 +13,8 @@ namespace BusinessLogic.Repositories.Teacher
 {
     public class TeacherRepository : Repository<TeacherEntity>, ITeacherRepository
     {
-        
+        public TeacherRepository(ICollegeManagmentContext dbcontext) : base(dbcontext) { }
+
 
         public IReadOnlyList<int> InsertedIds { get; private set; }
 
@@ -56,7 +57,7 @@ namespace BusinessLogic.Repositories.Teacher
         }
         public async Task<List<TeacherViewModel>> GetAsync()
         {
-            return await _dbContext.Teachers
+            return await _dbContext.Set<TeacherEntity>()
                 .Select(t => new TeacherViewModel
                 {
                     Id = t.Id,
@@ -121,7 +122,7 @@ namespace BusinessLogic.Repositories.Teacher
         }
         private void CheckIsTeacherDeletable(TeacherEntity entity)
         {
-            var isTeacherUsedAtTeacherCourses = _dbContext.TeacherCourses
+            var isTeacherUsedAtTeacherCourses = _dbContext.Set<DataAccess.Entities.TeacherCourse>()
                 .Include(tc => tc.Teacher)
                 .Any(tc => tc.Teacher.Id == entity.Id);
 
@@ -130,7 +131,7 @@ namespace BusinessLogic.Repositories.Teacher
         }
         private void CheckDoesIdExist(int id)
         {
-            var doesIdExistInTeacher = _dbContext.Teachers.Any(t => t.Id == id);
+            var doesIdExistInTeacher = _dbContext.Set<TeacherEntity>().Any(t => t.Id == id);
             if (!doesIdExistInTeacher)
                 throw new Exception("this id does not exist");
 
