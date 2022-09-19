@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.Repositories.Repositorey;
 using BusinessLogic.ViewModels;
+using DataAccess.EntitiesConfiguration;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -12,6 +13,8 @@ namespace BusinessLogic.Repositories.Teacher
 {
     public class TeacherRepository : Repository<TeacherEntity>, ITeacherRepository
     {
+        
+
         public IReadOnlyList<int> InsertedIds { get; private set; }
 
         public override void Add(TeacherEntity entity)
@@ -42,7 +45,7 @@ namespace BusinessLogic.Repositories.Teacher
 
         public override async Task SaveAsync()
         {
-            var addedEntities = dbContext.ChangeTracker
+            var addedEntities = _dbContext.ChangeTracker
                 .Entries<TeacherEntity>()
                 .Where(t => t.State == EntityState.Added)
                 .ToArray();
@@ -53,7 +56,7 @@ namespace BusinessLogic.Repositories.Teacher
         }
         public async Task<List<TeacherViewModel>> GetAsync()
         {
-            return await dbContext.Teachers
+            return await _dbContext.Teachers
                 .Select(t => new TeacherViewModel
                 {
                     Id = t.Id,
@@ -89,8 +92,8 @@ namespace BusinessLogic.Repositories.Teacher
             CheckDoesIdExist(id);
 
             var teacherEntity = await FetchAsync(id);
-            
-           Delete(teacherEntity);
+
+            Delete(teacherEntity);
         }
 
 
@@ -118,7 +121,7 @@ namespace BusinessLogic.Repositories.Teacher
         }
         private void CheckIsTeacherDeletable(TeacherEntity entity)
         {
-            var isTeacherUsedAtTeacherCourses = dbContext.TeacherCourses
+            var isTeacherUsedAtTeacherCourses = _dbContext.TeacherCourses
                 .Include(tc => tc.Teacher)
                 .Any(tc => tc.Teacher.Id == entity.Id);
 
@@ -127,10 +130,10 @@ namespace BusinessLogic.Repositories.Teacher
         }
         private void CheckDoesIdExist(int id)
         {
-            var doesIdExistInTeacher = dbContext.Teachers.Any(t => t.Id == id);
+            var doesIdExistInTeacher = _dbContext.Teachers.Any(t => t.Id == id);
             if (!doesIdExistInTeacher)
                 throw new Exception("this id does not exist");
-            
+
         }
 
     }

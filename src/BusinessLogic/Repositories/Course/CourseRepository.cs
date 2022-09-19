@@ -40,7 +40,7 @@ namespace BusinessLogic.Repositories.Course
 
         public override async Task SaveAsync()
         {
-            var addedEntities = dbContext.ChangeTracker
+            var addedEntities = _dbContext.ChangeTracker
                 .Entries<CourseEntity>()
                 .Where(t => t.State == EntityState.Added)
                 .ToArray();
@@ -51,7 +51,7 @@ namespace BusinessLogic.Repositories.Course
         }
         public async Task<List<CourseViewModel>> GetAsync()
         {
-            return await dbContext.Courses
+            return await _dbContext.Courses
                 .Select(c => new CourseViewModel 
                 {
                     Id = c.Id,
@@ -94,7 +94,7 @@ namespace BusinessLogic.Repositories.Course
         private bool IsLetter(string name) => int.TryParse(name , out _);
         private void CheckIsCourseDeletable(CourseEntity entity)
         {
-            var isCourseUsedAtTeacherCourses = dbContext.TeacherCourses
+            var isCourseUsedAtTeacherCourses = _dbContext.TeacherCourses
                 .Include(tc => tc.Course)
                 .Any(tc => tc.Course.Id == entity.Id);
 
@@ -103,7 +103,7 @@ namespace BusinessLogic.Repositories.Course
         }
         private void CheckDoesIdExist(int id)
         {
-            var doesIdExistInCourse = dbContext.Courses.Any(t => t.Id == id);
+            var doesIdExistInCourse = _dbContext.Courses.Any(t => t.Id == id);
 
             if (!doesIdExistInCourse)
                 throw new Exception("this id does not exist");

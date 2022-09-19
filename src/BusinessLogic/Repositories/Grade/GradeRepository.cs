@@ -40,7 +40,7 @@ namespace BusinessLogic.Repositories.Grade
 
         public override async Task SaveAsync()
         {
-            var addedEntities = dbContext.ChangeTracker
+            var addedEntities = _dbContext.ChangeTracker
                 .Entries<GradeEntity>()
                 .Where(g => g.State == EntityState.Added)
                 .ToArray();
@@ -51,7 +51,7 @@ namespace BusinessLogic.Repositories.Grade
         }
         public async Task<List<GradeViewModel>> GetAsync()
         {
-            return await dbContext.Grades
+            return await _dbContext.Grades
                 .Select(g => new GradeViewModel
                 {
                     Id = g.Id,
@@ -63,8 +63,8 @@ namespace BusinessLogic.Repositories.Grade
         }
         public async Task Insert(int score, int teacherCourseId, int studentId)
         {
-            var givenTeacherCourseId = await dbContext.TeacherCourses.FindAsync(teacherCourseId);
-            var givenStudentId = await dbContext.Students.FindAsync(studentId);
+            var givenTeacherCourseId = await _dbContext.TeacherCourses.FindAsync(teacherCourseId);
+            var givenStudentId = await _dbContext.Students.FindAsync(studentId);
 
             var grade = new GradeEntity
             {
@@ -82,8 +82,8 @@ namespace BusinessLogic.Repositories.Grade
             CheckDoTeacherCourceIdAndStuentIdExist(teacherCourseId, studentId);
 
             var gradeId = await FetchAsync(id);
-            var givenTeacherCourseId = await dbContext.TeacherCourses.FindAsync(teacherCourseId);
-            var givenStudentId = await dbContext.Students.FindAsync(studentId);
+            var givenTeacherCourseId = await _dbContext.TeacherCourses.FindAsync(teacherCourseId);
+            var givenStudentId = await _dbContext.Students.FindAsync(studentId);
 
             gradeId.Score = score;
             gradeId.TeacherCourse = givenTeacherCourseId;
@@ -95,7 +95,7 @@ namespace BusinessLogic.Repositories.Grade
         {
             CheckDoesIdExistInGrade(id);
 
-            var gradeId = await dbContext.Grades.FindAsync(id);
+            var gradeId = await _dbContext.Grades.FindAsync(id);
 
             Delete(gradeId);
         }
@@ -110,15 +110,15 @@ namespace BusinessLogic.Repositories.Grade
         }
         private void CheckDoesIdExistInGrade(int id)
         {
-            var gradeId = dbContext.Grades.Any(g => g.Id == id);
+            var gradeId = _dbContext.Grades.Any(g => g.Id == id);
 
             if (!gradeId)
                 throw new Exception("This id does not exist");
         }
         private void CheckDoTeacherCourceIdAndStuentIdExist(int teacherCourseId, int studentId)
         {
-            var doesIdExistInTeacherCourse = dbContext.TeacherCourses.Any(tc => tc.Id == teacherCourseId);
-            var doesIdExistInStudent = dbContext.Students.Any(s => s.Id == studentId);
+            var doesIdExistInTeacherCourse = _dbContext.TeacherCourses.Any(tc => tc.Id == teacherCourseId);
+            var doesIdExistInStudent = _dbContext.Students.Any(s => s.Id == studentId);
 
             if (!doesIdExistInTeacherCourse && !doesIdExistInStudent)
                 throw new Exception("teacherCourse id or Student id doesn't exist");

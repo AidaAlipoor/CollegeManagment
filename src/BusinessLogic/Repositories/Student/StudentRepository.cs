@@ -41,7 +41,7 @@ namespace BusinessLogic.Repositories.Student
 
         public override async Task SaveAsync()
         {
-            var addedEntities = dbContext.ChangeTracker
+            var addedEntities = _dbContext.ChangeTracker
                .Entries<StudentEntity>()
                .Where(t => t.State == EntityState.Added)
                .ToArray();
@@ -52,7 +52,7 @@ namespace BusinessLogic.Repositories.Student
         }
         public async Task<List<StudentViewModel>> GetAsync()
         {
-            var student = await dbContext.Students
+            var student = await _dbContext.Students
                 .Select(s => new StudentViewModel
                 {
                     Id = s.Id,
@@ -120,7 +120,7 @@ namespace BusinessLogic.Repositories.Student
 
         private void CheckDoesIdExist(int id)
         {
-            var doesIdExistInTeacher = dbContext.Students.Any(t => t.Id == id);
+            var doesIdExistInTeacher = _dbContext.Students.Any(t => t.Id == id);
             if (!doesIdExistInTeacher)
                 throw new Exception("this id does not exist");
 

@@ -29,7 +29,8 @@ namespace CollegeManagment.UI.Forms
         {
             InitializeComponent();
 
-            var dbContext = CollegeManagmentContext.GetInstance();
+            //TODO: should be fixed with ioc container
+            //var dbContext = CollegeManagmentContext.GetInstance();
 
             _teacherCourseRepository = new TeacherCourseRepository();
             _gradeRepository = new GradeRepository();

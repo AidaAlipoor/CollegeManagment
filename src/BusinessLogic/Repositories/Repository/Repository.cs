@@ -10,10 +10,15 @@ namespace BusinessLogic.Repositories.Repositorey
 {
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        protected readonly CollegeManagmentContext dbContext = CollegeManagmentContext.GetInstance();
+        protected readonly ICollegeManagmentContext _dbContext;
         private readonly DbSet<TEntity> _dbSet;
 
-        public Repository() => _dbSet = dbContext.Set<TEntity>();
+        public Repository(ICollegeManagmentContext dbcontext)
+        {
+            _dbContext = dbcontext;
+            _dbSet = _dbContext.Set<TEntity>();
+        }
+
 
         public virtual void Add(TEntity entity) => _dbSet.Add(entity);
 
@@ -22,7 +27,7 @@ namespace BusinessLogic.Repositories.Repositorey
         public virtual void Update(TEntity entity)
         {
             _dbSet.Attach(entity);
-            var entry = dbContext.Entry(entity);
+            var entry = _dbContext.Entry(entity);
             entry.State = EntityState.Modified;
         }
 
@@ -40,7 +45,7 @@ namespace BusinessLogic.Repositories.Repositorey
         public virtual async Task<List<TEntity>> FetchAsync(Expression<Func<TEntity, bool>> predicate)
             => await _dbSet.Where(predicate).ToListAsync();
 
-        public virtual async Task SaveAsync() => await dbContext.SaveChangesAsync();
+        public virtual async Task SaveAsync() => await _dbContext.SaveChangesAsync();
 
     }
 }

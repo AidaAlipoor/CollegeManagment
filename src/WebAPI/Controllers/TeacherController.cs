@@ -1,6 +1,4 @@
-﻿using BusinessLogic.Repositories;
-using BusinessLogic.Repositories.Teacher;
-using System;
+﻿using BusinessLogic.Repositories.Teacher;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -11,7 +9,10 @@ namespace WebAPI.Controllers
     public class TeacherController : ApiController
     {
         private readonly ITeacherRepository _repository;
-        public TeacherController() { _repository = new TeacherRepository(); }
+        public TeacherController(ITeacherRepository repository) 
+        { 
+            _repository = repository;
+        }
 
         [HttpGet]
         public async Task<IHttpActionResult> Get()
@@ -48,8 +49,8 @@ namespace WebAPI.Controllers
         {
             await _repository.Delete(id);
 
-            await _repository.SaveAsync(); 
-            
+            await _repository.SaveAsync();
+
             return Ok();
         }
     }
