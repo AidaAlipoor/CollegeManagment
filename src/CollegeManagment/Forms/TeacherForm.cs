@@ -19,7 +19,7 @@ namespace CollegeManagment.UI.Forms
         {
             InitializeComponent();
 
-            _repository = new TeacherRepository();
+            //_repository = new TeacherRepository();
         }
 
         private async void AddButton_Click(object sender, EventArgs e)

@@ -32,9 +32,9 @@ namespace CollegeManagment.UI.Forms
             //TODO: should be fixed with ioc container
             //var dbContext = CollegeManagmentContext.GetInstance();
 
-            _teacherCourseRepository = new TeacherCourseRepository();
-            _gradeRepository = new GradeRepository();
-            _studentRepository = new StudentRepository();
+            //_teacherCourseRepository = new TeacherCourseRepository();
+            //_gradeRepository = new GradeRepository();
+            //_studentRepository = new StudentRepository();
         }
 
         private async void AddButton_Click(object sender, EventArgs e)

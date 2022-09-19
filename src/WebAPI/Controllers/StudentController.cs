@@ -13,7 +13,10 @@ namespace WebAPI.Controllers
     public class StudentController : ApiController
     {
         private readonly IStudentRepository _repository;
-        public StudentController() => _repository = new StudentRepository();
+        public StudentController(IStudentRepository repository)
+        {
+            _repository = repository;
+        }
 
         [System.Web.Http.HttpGet]
         public async Task<IHttpActionResult> Get()

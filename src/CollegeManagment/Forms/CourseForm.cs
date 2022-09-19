@@ -16,7 +16,7 @@ namespace CollegeManagment.UI.Forms
 {
     public partial class CourseForm : BaseForm
     {
-        private readonly IRepository<CourseEntity> _courseRepository = new CourseRepository();
+        private readonly IRepository<CourseEntity> _courseRepository;/* = new CourseRepository();*/
         public CourseForm()
         {
             InitializeComponent();

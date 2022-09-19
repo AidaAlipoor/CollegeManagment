@@ -11,9 +11,9 @@ namespace WebAPI.Controllers
     {
         private readonly IGradeRepository _repository;
 
-        public GradeController() 
-        { 
-            _repository = new GradeRepository(); 
+        public GradeController(IGradeRepository repository) 
+        {
+            _repository = repository;
         }
 
         [HttpGet]

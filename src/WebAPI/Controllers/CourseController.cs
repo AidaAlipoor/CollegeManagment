@@ -13,9 +13,9 @@ namespace WebAPI.Controllers
     public class CourseController : ApiController
     {
         private readonly ICourseRepository _repository;
-        public CourseController()
+        public CourseController(ICourseRepository repository)
         {
-            _repository = new CourseRepository();
+            _repository = repository;
         }
 
         [HttpGet]
