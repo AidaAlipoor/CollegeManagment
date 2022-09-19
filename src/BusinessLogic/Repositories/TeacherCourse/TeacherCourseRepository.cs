@@ -7,6 +7,7 @@ using System.Linq;
 using BusinessLogic.ViewModels;
 using System.Data.Entity;
 using BusinessLogic.Repositories.Repositorey;
+using DataAccess.EntitiesConfiguration;
 
 namespace BusinessLogic.Repositories.TeacherCourse
 {
@@ -14,7 +15,7 @@ namespace BusinessLogic.Repositories.TeacherCourse
     {
         public IReadOnlyList<int> InsertedIds { get; private set; }
 
-        public TeacherCourseRepository() : base() { }
+        public TeacherCourseRepository(ICollegeManagmentContext dbContext) : base(dbContext) { }
 
         public override void Add(TeacherCourseEntity entity)
         {
@@ -50,7 +51,7 @@ namespace BusinessLogic.Repositories.TeacherCourse
         }
         public async Task<List<TeacherCourseViewModel>> GetAsync()
         {
-            return await _dbContext.TeacherCourses
+            return await _dbContext.Set<TeacherCourseEntity>()
                 .Select(tc => new TeacherCourseViewModel
                 {
                     Id = tc.Id,
@@ -64,8 +65,8 @@ namespace BusinessLogic.Repositories.TeacherCourse
         {
             await CheckDoTeacherIdAndCourceIdExist(teacherId, courseId);
 
-            var givenTeacherId = await _dbContext.Teachers.FindAsync(teacherId);
-            var givenCourseId = await _dbContext.Courses.FindAsync(courseId);
+            var givenTeacherId = await _dbContext.Set<DataAccess.Entities.Teacher>().FindAsync(teacherId);
+            var givenCourseId = await _dbContext.Set<DataAccess.Entities.Course>().FindAsync(courseId);
 
             var teacherCourse = new TeacherCourseEntity
             {
@@ -82,8 +83,8 @@ namespace BusinessLogic.Repositories.TeacherCourse
 
             var teacherCourse = await FetchAsync(id);
 
-            var givenTeacherId = await _dbContext.Teachers.FindAsync(teacherId);
-            var givenCourseId = await _dbContext.Courses.FindAsync(courseId);
+            var givenTeacherId = await _dbContext.Set<DataAccess.Entities.Teacher>().FindAsync(teacherId);
+            var givenCourseId = await _dbContext.Set < DataAccess.Entities.Course>().FindAsync(courseId);
 
             teacherCourse.Teacher = givenTeacherId;
             teacherCourse.Course = givenCourseId;
@@ -103,7 +104,7 @@ namespace BusinessLogic.Repositories.TeacherCourse
 
         private async Task CheckDoesIdExistInTeacherCourse(int id)
         {
-            var doesIdExistInTeacherCource = await _dbContext.TeacherCourses.AnyAsync(tc => tc.Id == id);
+            var doesIdExistInTeacherCource = await _dbContext.Set<TeacherCourseEntity>().AnyAsync(tc => tc.Id == id);
 
             if (!doesIdExistInTeacherCource)
                 throw new Exception("this id does not exist");
@@ -111,8 +112,8 @@ namespace BusinessLogic.Repositories.TeacherCourse
         }
         private async Task CheckDoTeacherIdAndCourceIdExist(int teacherId, int courseId)
         {
-            var doesIdExistInTeacher = await _dbContext.Teachers.AnyAsync(tc => tc.Id == teacherId);
-            var doesIdExistInCource = await _dbContext.Courses.AnyAsync(tc => tc.Id == courseId);
+            var doesIdExistInTeacher = await _dbContext.Set<DataAccess.Entities.Teacher>().AnyAsync(tc => tc.Id == teacherId);
+            var doesIdExistInCource = await _dbContext.Set<DataAccess.Entities.Course>().AnyAsync(tc => tc.Id == courseId);
 
             if (!doesIdExistInTeacher && !doesIdExistInCource)
                 throw new Exception("teacher id or course id doesn't exist");
