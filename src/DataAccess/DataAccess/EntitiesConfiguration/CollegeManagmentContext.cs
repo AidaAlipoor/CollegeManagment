@@ -4,7 +4,7 @@ namespace DataAccess.EntitiesConfiguration
 {
     internal class CollegeManagmentContext : DbContext, ICollegeManagmentContext
     {
-        private CollegeManagmentContext()
+        public CollegeManagmentContext()
             : base("Server=.;Database=CollegeManagement;Trusted_Connection=True;") { }
 
 

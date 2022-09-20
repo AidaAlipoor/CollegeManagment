@@ -4,7 +4,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Mvc;
 using WebAPI.DTOs;
 
 
@@ -18,7 +17,7 @@ namespace WebAPI.Controllers
             _repository = repository;
         }
 
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public async Task<IHttpActionResult> Get()
         {
            var student = await _repository.GetAsync();
@@ -26,7 +25,7 @@ namespace WebAPI.Controllers
             return Ok(student);
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public async Task<IHttpActionResult> Post(StudentDto studentDto)
         {
             _repository.Insert(studentDto.Name, studentDto.Lastname, studentDto.IdNumber);
@@ -37,8 +36,7 @@ namespace WebAPI.Controllers
 
             return Ok(id);
         }
-
-        [System.Web.Http.HttpPut]
+        [HttpPut]
         public async Task<IHttpActionResult> Put(int id, StudentDto studentDto)
         {
             await _repository.UpdateAsync(id, studentDto.Name, studentDto.Lastname, studentDto.IdNumber);
@@ -48,7 +46,7 @@ namespace WebAPI.Controllers
             return Ok();
         }
 
-        [System.Web.Http.HttpDelete]
+        [HttpDelete]
         public async Task<IHttpActionResult> Delete(int id)
         {
             await _repository.Delete(id);

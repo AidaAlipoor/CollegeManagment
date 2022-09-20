@@ -1,8 +1,11 @@
 ﻿using Autofac;
 using Autofac.Integration.WebApi;
+using BusinessLogic.Repositories.Course;
+using BusinessLogic.Repositories.Grade;
+using BusinessLogic.Repositories.Student;
 using BusinessLogic.Repositories.Teacher;
+using BusinessLogic.Repositories.TeacherCourse;
 using DataAccess.Configuration;
-using DataAccess.EntitiesConfiguration;
 using System.Reflection;
 using System.Web.Http;
 
@@ -35,6 +38,10 @@ namespace WebAPI
 
 
             containerBuilder.RegisterType<TeacherRepository>().As<ITeacherRepository>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<StudentRepository>().As<IStudentRepository>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<CourseRepository>().As<ICourseRepository>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<TeacherCourseRepository>().As<ITeacherCourseRepository>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<GradeRepository>().As<IGradeRepository>().InstancePerLifetimeScope();
 
             containerBuilder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
