@@ -90,7 +90,7 @@ namespace BusinessLogic.Repositories.Course
 
         private void ValidCourse(CourseEntity entity)
         {
-            if (IsCourseNameEmpty(entity.CourseName) || !IsLetter(entity.CourseName))
+            if (IsCourseNameEmpty(entity.CourseName) || IsLetter(entity.CourseName))
                 throw new Exception("Name is invalid");
         } 
         private bool IsCourseNameEmpty(string name) => string.IsNullOrEmpty(name);
@@ -104,11 +104,11 @@ namespace BusinessLogic.Repositories.Course
             if (isCourseUsedAtTeacherCourses)
                 throw new Exception("this item can not be deleted!");
         }
-        private void CheckDoesIdExist(int id)
+        private async void CheckDoesIdExist(int id)
         {
-            var doesIdExistInCourse = _dbContext.Set<CourseEntity>().Any(t => t.Id == id);
+            var doesIdExistInCourse = await FetchAsync(id);
 
-            if (!doesIdExistInCourse)
+            if (doesIdExistInCourse == null)
                 throw new Exception("this id does not exist");
 
         }

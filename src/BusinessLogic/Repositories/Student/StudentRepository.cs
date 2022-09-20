@@ -81,6 +81,8 @@ namespace BusinessLogic.Repositories.Student
         }
         public async Task UpdateAsync(int id, string name, string lastname, int idNumber)
         {
+            CheckDoesIdExist(id);
+
             var student = await FetchAsync(id);
 
             student.StudentName = name;
@@ -119,11 +121,10 @@ namespace BusinessLogic.Repositories.Student
         {
             return idNumber.ToString().Length == StudentEntity.IdNumberLengthLimit;
         }
-
         private void CheckDoesIdExist(int id)
         {
-            var doesIdExistInTeacher = _dbContext.Set<StudentEntity>().Any(t => t.Id == id);
-            if (!doesIdExistInTeacher)
+            var doesIdExistInStudent = FetchAsync(id);
+            if (doesIdExistInStudent == null)
                 throw new Exception("this id does not exist");
 
         }

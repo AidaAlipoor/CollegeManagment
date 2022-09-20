@@ -1,4 +1,6 @@
 ﻿using BusinessLogic.Repositories.Repositorey;
+using BusinessLogic.Repositories.Student;
+using BusinessLogic.Repositories.TeacherCourse;
 using BusinessLogic.ViewModels;
 using DataAccess.EntitiesConfiguration;
 using System;
@@ -14,14 +16,22 @@ namespace BusinessLogic.Repositories.Grade
 {
     public class GradeRepository : Repository<GradeEntity>, IGradeRepository
     {
-        public GradeRepository(ICollegeManagmentContext dbcontext) : base(dbcontext) { }
+        private readonly IStudentRepository _studentRepository;
+        private readonly ITeacherCourseRepository _teacherCourseRepository;
+        public GradeRepository(
+            ICollegeManagmentContext dbcontext
+            , IStudentRepository studentRepository , ITeacherCourseRepository teacherCourseRepository)
+            : base(dbcontext)
+        {
+            _studentRepository = studentRepository;
+            _teacherCourseRepository = teacherCourseRepository;
+        }
 
         public IReadOnlyList<int> InsertedIds { get; private set; }
 
         public override void Add(GradeEntity entity)
         {
             ValidGradeValue(entity.Score);
-            CheckDoTeacherCourceIdAndStuentIdExist(entity.TeacherCourse.Id, entity.Students.Id);
 
             base.Add(entity);
         }
@@ -65,8 +75,11 @@ namespace BusinessLogic.Repositories.Grade
         }
         public async Task Insert(int score, int teacherCourseId, int studentId)
         {
-            var givenTeacherCourseId = await _dbContext.Set<DataAccess.Entities.TeacherCourse>().FindAsync(teacherCourseId);
-            var givenStudentId = await _dbContext.Set<DataAccess.Entities.Student>().FindAsync(studentId);
+            CheckDoesTeacherCourceIdExist(teacherCourseId);
+            CheckDoesStudentIdExist(studentId);
+
+            var givenTeacherCourseId = await _teacherCourseRepository.FetchAsync(teacherCourseId);
+            var givenStudentId = await _studentRepository.FetchAsync(studentId);
 
             var grade = new GradeEntity
             {
@@ -81,11 +94,12 @@ namespace BusinessLogic.Repositories.Grade
         public async Task UpdateAsync(int id, int score, int teacherCourseId, int studentId)
         {
             CheckDoesIdExistInGrade(id);
-            CheckDoTeacherCourceIdAndStuentIdExist(teacherCourseId, studentId);
+            CheckDoesTeacherCourceIdExist(teacherCourseId);
+            CheckDoesStudentIdExist(studentId);
 
             var gradeId = await FetchAsync(id);
-            var givenTeacherCourseId = await _dbContext.Set<DataAccess.Entities.TeacherCourse>().FindAsync(teacherCourseId);
-            var givenStudentId = await _dbContext.Set<DataAccess.Entities.Student>().FindAsync(studentId);
+            var givenTeacherCourseId = await _teacherCourseRepository.FetchAsync(teacherCourseId);
+            var givenStudentId = await _studentRepository.FetchAsync(studentId);
 
             gradeId.Score = score;
             gradeId.TeacherCourse = givenTeacherCourseId;
@@ -112,19 +126,26 @@ namespace BusinessLogic.Repositories.Grade
         }
         private void CheckDoesIdExistInGrade(int id)
         {
-            var gradeId = _dbContext.Set<GradeEntity>().Any(g => g.Id == id);
+            var gradeId = FetchAsync(id);
 
-            if (!gradeId)
+            if (gradeId == null)
                 throw new Exception("This id does not exist");
         }
-        private void CheckDoTeacherCourceIdAndStuentIdExist(int teacherCourseId, int studentId)
+        private void CheckDoesTeacherCourceIdExist(int teacherCourseId)
         {
-            var doesIdExistInTeacherCourse = _dbContext.Set<DataAccess.Entities.TeacherCourse>().Any(tc => tc.Id == teacherCourseId);
-            var doesIdExistInStudent = _dbContext.Set<DataAccess.Entities.Student>().Any(s => s.Id == studentId);
+            var doesIdExistInTeacherCourse = _teacherCourseRepository.FetchAsync(teacherCourseId);
 
-            if (!doesIdExistInTeacherCourse && !doesIdExistInStudent)
-                throw new Exception("teacherCourse id or Student id doesn't exist");
+            if (doesIdExistInTeacherCourse == null)
+                throw new Exception("teacherCourse id doesn't exist");
         }
+        private void CheckDoesStudentIdExist(int studentId)
+        {
+            var doesIdExistInStudent = _studentRepository.FetchAsync(studentId);
+
+            if (doesIdExistInStudent == null)
+                throw new Exception("student id doesn't exist");
+        }
+
 
     }
 }
