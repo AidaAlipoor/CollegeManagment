@@ -11,7 +11,7 @@ using TeacherEntity = DataAccess.Entities.Teacher;
 
 namespace BusinessLogic.Repositories.Teacher
 {
-    public class TeacherRepository : Repository<TeacherEntity>, ITeacherRepository
+    internal class TeacherRepository : Repository<TeacherEntity>, ITeacherRepository
     {
         public TeacherRepository(ICollegeManagmentContext dbcontext) : base(dbcontext) { }
 
@@ -80,7 +80,7 @@ namespace BusinessLogic.Repositories.Teacher
         }
         public async Task UpdateAsync(int id, string name, string lastname, DateTime birthday)
         {
-            CheckDoesIdExist(id);
+           await CheckDoesIdExist(id);
 
             var teacher = await FetchAsync(id);
 
@@ -92,7 +92,7 @@ namespace BusinessLogic.Repositories.Teacher
         }
         public async Task Delete(int id)
         {
-            CheckDoesIdExist(id);
+            await CheckDoesIdExist(id);
 
             var teacherEntity = await FetchAsync(id);
 
@@ -131,7 +131,7 @@ namespace BusinessLogic.Repositories.Teacher
             if (isTeacherUsedAtTeacherCourses)
                 throw new Exception("This item can not be deleted! ");
         }
-        private async void CheckDoesIdExist(int id)
+        private async Task CheckDoesIdExist(int id)
         {
             var doesIdExistInTeacher = await FetchAsync(id);
 

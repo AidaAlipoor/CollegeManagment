@@ -8,7 +8,7 @@ using DataAccess.EntitiesConfiguration;
 
 namespace BusinessLogic.Repositories.Repositorey
 {
-    public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    internal abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         protected readonly ICollegeManagmentContext _dbContext;
         private readonly DbSet<TEntity> _dbSet;

@@ -12,7 +12,7 @@ using StudentEntity = DataAccess.Entities.Student;
 
 namespace BusinessLogic.Repositories.Student
 {
-    public class StudentRepository : Repository<StudentEntity>, IStudentRepository
+    internal class StudentRepository : Repository<StudentEntity>, IStudentRepository
     {
         public StudentRepository(ICollegeManagmentContext dbcontext) : base(dbcontext) { }
 

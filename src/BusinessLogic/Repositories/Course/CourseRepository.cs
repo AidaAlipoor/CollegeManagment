@@ -12,7 +12,7 @@ using CourseEntity = DataAccess.Entities.Course;
 
 namespace BusinessLogic.Repositories.Course
 {
-    public class CourseRepository : Repository<CourseEntity> , ICourseRepository
+    internal class CourseRepository : Repository<CourseEntity> , ICourseRepository
     {
         public CourseRepository(ICollegeManagmentContext dbcontext) : base(dbcontext) { }
 

@@ -14,7 +14,7 @@ using GradeEntity = DataAccess.Entities.Grade;
 
 namespace BusinessLogic.Repositories.Grade
 {
-    public class GradeRepository : Repository<GradeEntity>, IGradeRepository
+    internal class GradeRepository : Repository<GradeEntity>, IGradeRepository
     {
         private readonly IStudentRepository _studentRepository;
         private readonly ITeacherCourseRepository _teacherCourseRepository;

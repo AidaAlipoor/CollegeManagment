@@ -13,7 +13,7 @@ using BusinessLogic.Repositories.Course;
 
 namespace BusinessLogic.Repositories.TeacherCourse
 {
-    public class TeacherCourseRepository : Repository<TeacherCourseEntity>, ITeacherCourseRepository
+    internal class TeacherCourseRepository : Repository<TeacherCourseEntity>, ITeacherCourseRepository
     {
         public IReadOnlyList<int> InsertedIds { get; private set; }
 
