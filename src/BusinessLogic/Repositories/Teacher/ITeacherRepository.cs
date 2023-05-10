@@ -1,6 +1,5 @@
 ﻿using BusinessLogic.Repositories.Repositorey;
 using BusinessLogic.ViewModels;
-using DataAccess.Entities;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

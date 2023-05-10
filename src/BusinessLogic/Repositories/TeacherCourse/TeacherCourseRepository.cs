@@ -10,6 +10,7 @@ using BusinessLogic.Repositories.Repositorey;
 using DataAccess.EntitiesConfiguration;
 using BusinessLogic.Repositories.Teacher;
 using BusinessLogic.Repositories.Course;
+using BusinessLogic.Repositories.Grade;
 
 namespace BusinessLogic.Repositories.TeacherCourse
 {
@@ -19,14 +20,16 @@ namespace BusinessLogic.Repositories.TeacherCourse
 
         private readonly ITeacherRepository _teacherRepository;
         private readonly ICourseRepository _courseRepository;
+        private readonly IGradeRepository _gradeRepository;
 
         public TeacherCourseRepository(
-            ICollegeManagmentContext dbContext, 
-            ITeacherRepository teacherRepository, ICourseRepository courseRepository)
+            ICollegeManagmentContext dbContext,
+            ITeacherRepository teacherRepository, ICourseRepository courseRepository, IGradeRepository gradeRepository)
             : base(dbContext)
         {
             _teacherRepository = teacherRepository;
             _courseRepository = courseRepository;
+            _gradeRepository = gradeRepository;
         }
 
         public override void Add(TeacherCourseEntity entity)
@@ -42,7 +45,13 @@ namespace BusinessLogic.Repositories.TeacherCourse
             base.Update(entity);
         }
 
-        public override async Task DeleteAsync(int id) => await base.DeleteAsync(id);
+        public override async Task DeleteAsync(int id)
+        {
+            await CheckDoesIdExistInTeacherCourse(id);
+            await CheckIsTeacherCourseDeletable(id);
+
+            await base.DeleteAsync(id);
+        }
         public override async Task<List<TeacherCourseEntity>> FetchAsync() => await base.FetchAsync();
         public override async Task<TeacherCourseEntity> FetchAsync(int id) => await base.FetchAsync(id);
         public override async Task<List<TeacherCourseEntity>> FetchAsync(Expression<Func<TeacherCourseEntity, bool>> predicate)
@@ -107,13 +116,10 @@ namespace BusinessLogic.Repositories.TeacherCourse
             Update(teacherCourse);
 
         }
-        public async Task Delete(int id)
+        public async Task<bool> AnyTeacher(int teacherId)
         {
-            await CheckDoesIdExistInTeacherCourse(id);
-
-            var teacherCourse = await FetchAsync(id);
-
-            Delete(teacherCourse);
+            var teacherEntity = await _teacherRepository.FetchAsync(teacherId);
+            return teacherEntity != null;
         }
 
 
@@ -138,6 +144,13 @@ namespace BusinessLogic.Repositories.TeacherCourse
 
             if (doesIdExistInCource == null)
                 throw new Exception("course id doesn't exist");
+        }
+        private async Task CheckIsTeacherCourseDeletable(int teacherCourseId)
+        {
+            var isTeacherCourseUsedInGrade = await _gradeRepository.AnyTeacherCourse(teacherCourseId);
+
+            if (isTeacherCourseUsedInGrade)
+                throw new Exception("This item can not be deleted! ");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Repositories.Repositorey;
+using BusinessLogic.Repositories.TeacherCourse;
 using BusinessLogic.ViewModels;
 using DataAccess.EntitiesConfiguration;
 using System;
@@ -13,7 +14,12 @@ namespace BusinessLogic.Repositories.Teacher
 {
     internal class TeacherRepository : Repository<TeacherEntity>, ITeacherRepository
     {
-        public TeacherRepository(ICollegeManagmentContext dbcontext) : base(dbcontext) { }
+        private readonly ITeacherCourseRepository _teaherCourseRepository;
+        public TeacherRepository(ICollegeManagmentContext dbcontext, ITeacherCourseRepository teaherCourseRepository)
+            :base(dbcontext)
+        {
+            _teaherCourseRepository = teaherCourseRepository;
+        }
 
 
         public IReadOnlyList<int> InsertedIds { get; private set; }
@@ -26,8 +32,6 @@ namespace BusinessLogic.Repositories.Teacher
         }
         public override void Delete(TeacherEntity entity)
         {
-            CheckIsTeacherDeletable(entity);
-
             base.Delete(entity);
         }
         public override void Update(TeacherEntity entity)
@@ -37,7 +41,11 @@ namespace BusinessLogic.Repositories.Teacher
             base.Update(entity);
         }
 
-        public override Task DeleteAsync(int id) => base.DeleteAsync(id);
+        public override async Task DeleteAsync(int id)
+        {
+            await CheckDoesIdExist(id);
+            await base.DeleteAsync(id);
+        }
         public override Task<List<TeacherEntity>> FetchAsync() => base.FetchAsync();
         public override Task<TeacherEntity> FetchAsync(int id) => base.FetchAsync(id);
         public override Task<List<TeacherEntity>> FetchAsync(Expression<Func<TeacherEntity, bool>> predicate)
@@ -122,15 +130,13 @@ namespace BusinessLogic.Repositories.Teacher
             return birthday.Year < TeacherEntity.MaxLimitedYear
                    && birthday.Year > TeacherEntity.MinLimitedYear;
         }
-        private void CheckIsTeacherDeletable(TeacherEntity entity)
-        {
-            var isTeacherUsedAtTeacherCourses = _dbContext.Set<DataAccess.Entities.TeacherCourse>()
-                .Include(tc => tc.Teacher)
-                .Any(tc => tc.Teacher.Id == entity.Id);
+        //private async Task CheckIsTeacherDeletable(int id)
+        //{
+        //      var isTeacherUsedAtTeacherCourses = _teaherCourseRepository.
 
-            if (isTeacherUsedAtTeacherCourses)
-                throw new Exception("This item can not be deleted! ");
-        }
+        //    if (isTeacherUsedAtTeacherCourses)
+        //        throw new Exception("This item can not be deleted! ");
+        //}
         private async Task CheckDoesIdExist(int id)
         {
             var doesIdExistInTeacher = await FetchAsync(id);

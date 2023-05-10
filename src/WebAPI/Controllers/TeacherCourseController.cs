@@ -1,5 +1,4 @@
-﻿using BusinessLogic.Repositories;
-using BusinessLogic.Repositories.TeacherCourse;
+﻿using BusinessLogic.Repositories.TeacherCourse;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -47,7 +46,7 @@ namespace WebAPI.Controllers
         [HttpDelete]
         public async Task<IHttpActionResult> Delete(int id)
         {
-            await _teacherCourseRepository.Delete(id);
+            await _teacherCourseRepository.DeleteAsync(id);
 
             await _teacherCourseRepository.SaveAsync();
 

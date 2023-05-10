@@ -17,6 +17,5 @@ namespace BusinessLogic.Repositories.TeacherCourse
         Task<List<TeacherCourseViewModel>> GetAsync();
         Task Insert(int teacherId , int courseId);
         Task UpdateAsync(int id , int teacherId, int courseId);
-        Task Delete(int id);
     }
 }

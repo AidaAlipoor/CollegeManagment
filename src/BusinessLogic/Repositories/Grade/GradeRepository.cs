@@ -20,7 +20,7 @@ namespace BusinessLogic.Repositories.Grade
         private readonly ITeacherCourseRepository _teacherCourseRepository;
         public GradeRepository(
             ICollegeManagmentContext dbcontext
-            , IStudentRepository studentRepository , ITeacherCourseRepository teacherCourseRepository)
+            , IStudentRepository studentRepository, ITeacherCourseRepository teacherCourseRepository)
             : base(dbcontext)
         {
             _studentRepository = studentRepository;
@@ -114,6 +114,12 @@ namespace BusinessLogic.Repositories.Grade
             var gradeId = await _dbContext.Set<GradeEntity>().FindAsync(id);
 
             Delete(gradeId);
+        }
+
+        public async Task<bool> AnyTeacherCourse(int teacherCourseId)
+        {
+            var gradeEntity = await FetchAsync(g => g.TeacherCourse.Id == teacherCourseId);
+            return gradeEntity != null;
         }
 
 
